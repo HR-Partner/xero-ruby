@@ -228,7 +228,7 @@ module XeroRuby::PayrollUk
     def earnings_type=(earnings_type)
       validator = EnumAttributeValidator.new('String', ["Allowance", "Backpay", "Bonus", "Commission", "LumpSum", "OtherEarnings", "OvertimeEarnings", "RegularEarnings", "StatutoryAdoptionPay", "StatutoryAdoptionPayNonPensionable", "StatutoryBereavementPay", "StatutoryMaternityPay", "StatutoryMaternityPayNonPensionable", "StatutoryPaternityPay", "StatutoryPaternityPayNonPensionable", "StatutoryParentalBereavementPayNonPensionable", "StatutorySharedParentalPay", "StatutorySharedParentalPayNonPensionable", "StatutorySickPay", "StatutorySickPayNonPensionable", "Tips(Direct)", "Tips(Non-Direct)"])
       unless validator.valid?(earnings_type)
-        fail ArgumentError, "invalid value for \"earnings_type\", must be one of #{validator.allowable_values}."
+        fail ArgumentError, "invalid value \"#{earnings_type}\" for \"earnings_type\", must be one of #{validator.allowable_values}."
       end
       @earnings_type = earnings_type
     end
@@ -238,7 +238,7 @@ module XeroRuby::PayrollUk
     def rate_type=(rate_type)
       validator = EnumAttributeValidator.new('String', ["RatePerUnit", "MultipleOfOrdinaryEarningsRate", "FixedAmount"])
       unless validator.valid?(rate_type)
-        fail ArgumentError, "invalid value for \"rate_type\", must be one of #{validator.allowable_values}."
+        fail ArgumentError, "invalid value \"#{rate_type}\" for \"rate_type\", must be one of #{validator.allowable_values}."
       end
       @rate_type = rate_type
     end
