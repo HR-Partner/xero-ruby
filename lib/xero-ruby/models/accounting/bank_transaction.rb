@@ -18,14 +18,14 @@ module XeroRuby::Accounting
   class BankTransaction
     # See Bank Transaction Types
     attr_accessor :type
-    RECEIVE = "RECEIVE".freeze
-    RECEIVE_OVERPAYMENT = "RECEIVE-OVERPAYMENT".freeze
-    RECEIVE_PREPAYMENT = "RECEIVE-PREPAYMENT".freeze
-    SPEND = "SPEND".freeze
-    SPEND_OVERPAYMENT = "SPEND-OVERPAYMENT".freeze
-    SPEND_PREPAYMENT = "SPEND-PREPAYMENT".freeze
-    RECEIVE_TRANSFER = "RECEIVE-TRANSFER".freeze
-    SPEND_TRANSFER = "SPEND-TRANSFER".freeze
+    RECEIVE ||= "RECEIVE".freeze
+    RECEIVE_OVERPAYMENT ||= "RECEIVE-OVERPAYMENT".freeze
+    RECEIVE_PREPAYMENT ||= "RECEIVE-PREPAYMENT".freeze
+    SPEND ||= "SPEND".freeze
+    SPEND_OVERPAYMENT ||= "SPEND-OVERPAYMENT".freeze
+    SPEND_PREPAYMENT ||= "SPEND-PREPAYMENT".freeze
+    RECEIVE_TRANSFER ||= "RECEIVE-TRANSFER".freeze
+    SPEND_TRANSFER ||= "SPEND-TRANSFER".freeze
     
 
     attr_accessor :contact
@@ -56,9 +56,9 @@ module XeroRuby::Accounting
     
     # See Bank Transaction Status Codes
     attr_accessor :status
-    AUTHORISED = "AUTHORISED".freeze
-    DELETED = "DELETED".freeze
-    VOIDED = "VOIDED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    DELETED ||= "DELETED".freeze
+    VOIDED ||= "VOIDED".freeze
     
 
     attr_accessor :line_amount_types
@@ -500,6 +500,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

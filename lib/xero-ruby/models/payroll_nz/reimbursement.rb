@@ -30,23 +30,23 @@ module XeroRuby::PayrollNz
     
     # See Reimbursement Categories
     attr_accessor :reimbursement_category
-    GST = "GST".freeze
-    NO_GST = "NoGST".freeze
-    GST_INCLUSIVE = "GSTInclusive".freeze
+    GST ||= "GST".freeze
+    NO_GST ||= "NoGST".freeze
+    GST_INCLUSIVE ||= "GSTInclusive".freeze
     
     # See Calculation Types
     attr_accessor :calculation_type
-    UNKNOWN = "Unknown".freeze
-    FIXED_AMOUNT = "FixedAmount".freeze
-    RATE_PER_UNIT = "RatePerUnit".freeze
+    UNKNOWN ||= "Unknown".freeze
+    FIXED_AMOUNT ||= "FixedAmount".freeze
+    RATE_PER_UNIT ||= "RatePerUnit".freeze
     
     # Optional Fixed Rate Amount. Applicable when calculation type is Fixed Amount
     attr_accessor :standard_amount
     
     # Optional Type Of Units. Applicable when calculation type is Rate Per Unit
     attr_accessor :standard_type_of_units
-    HOURS = "Hours".freeze
-    KM = "km".freeze
+    HOURS ||= "Hours".freeze
+    KM ||= "km".freeze
     
     # Optional Rate Per Unit. Applicable when calculation type is Rate Per Unit
     attr_accessor :standard_rate_per_unit
@@ -368,6 +368,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

@@ -34,6 +34,9 @@ module XeroRuby::PayrollAu
     # Last modified timestamp
     attr_accessor :updated_date_utc
     
+    # Reference Date (YYYY-MM-DD)
+    attr_accessor :reference_date
+    
     # Displays array of validation error messages from the API
     attr_accessor :validation_errors
     
@@ -46,6 +49,7 @@ module XeroRuby::PayrollAu
         :'payment_date' => :'PaymentDate',
         :'payroll_calendar_id' => :'PayrollCalendarID',
         :'updated_date_utc' => :'UpdatedDateUTC',
+        :'reference_date' => :'ReferenceDate',
         :'validation_errors' => :'ValidationErrors'
       }
     end
@@ -59,6 +63,7 @@ module XeroRuby::PayrollAu
         :'payment_date' => :'Date',
         :'payroll_calendar_id' => :'String',
         :'updated_date_utc' => :'DateTime',
+        :'reference_date' => :'Date',
         :'validation_errors' => :'Array<ValidationError>'
       }
     end
@@ -102,6 +107,10 @@ module XeroRuby::PayrollAu
         self.updated_date_utc = attributes[:'updated_date_utc']
       end
 
+      if attributes.key?(:'reference_date')
+        self.reference_date = attributes[:'reference_date']
+      end
+
       if attributes.key?(:'validation_errors')
         if (value = attributes[:'validation_errors']).is_a?(Array)
           self.validation_errors = value
@@ -133,6 +142,7 @@ module XeroRuby::PayrollAu
           payment_date == o.payment_date &&
           payroll_calendar_id == o.payroll_calendar_id &&
           updated_date_utc == o.updated_date_utc &&
+          reference_date == o.reference_date &&
           validation_errors == o.validation_errors
     end
 
@@ -145,7 +155,7 @@ module XeroRuby::PayrollAu
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [name, calendar_type, start_date, payment_date, payroll_calendar_id, updated_date_utc, validation_errors].hash
+      [name, calendar_type, start_date, payment_date, payroll_calendar_id, updated_date_utc, reference_date, validation_errors].hash
     end
 
     # Builds the object from hash
@@ -274,6 +284,8 @@ module XeroRuby::PayrollAu
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

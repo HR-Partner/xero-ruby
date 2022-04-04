@@ -29,7 +29,7 @@ module XeroRuby
     # Defines the headers to be used in HTTP requests of all API calls by default.
     #
     # @return [Hash]
-    attr_accessor :default_headers
+    attr_accessor :default_headers, :grant_type
 
     # Initializes the ApiClient
     # @option config [Configuration] Configuration for initializing the object, default to Configuration.default
@@ -37,6 +37,7 @@ module XeroRuby
       @client_id = credentials[:client_id]
       @client_secret = credentials[:client_secret]
       @redirect_uri = credentials[:redirect_uri]
+      @grant_type = credentials[:grant_type] || 'authorization_code'
       @scopes = credentials[:scopes]
       @state = credentials[:state]
       default_config = Configuration.default.clone
@@ -56,9 +57,17 @@ module XeroRuby
     end
 
     def authorization_url
-      url = "#{@config.login_url}?response_type=code&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}&scope=#{CGI.escape(@scopes)}"
-      url << "&state=#{@state}" if @state
-      return url
+      url = URI.parse(@config.login_url)
+      url.query = URI.encode_www_form(
+        {
+          response_type: 'code',
+          client_id: @client_id,
+          redirect_uri: @redirect_uri,
+          scope: @scopes,
+          state: @state
+        }.compact
+      )
+      url.to_s
     end
 
     def accounting_api
@@ -94,6 +103,16 @@ module XeroRuby
     def payroll_uk_api
       @config.base_url = @config.payroll_uk_url
       XeroRuby::PayrollUkApi.new(self)
+    end
+
+    def app_store_api
+      @config.base_url = @config.app_store_url
+      XeroRuby::AppStoreApi.new(self)
+    end
+
+    def finance_api
+      @config.base_url = @config.finance_url
+      XeroRuby::FinanceApi.new(self)
     end
 
     # Token Helpers
@@ -135,9 +154,18 @@ module XeroRuby
       @config.id_token = id_token
     end
 
+    def get_client_credentials_token
+      data = {
+        grant_type: @grant_type
+      }
+      token_set = token_request(data, '/token')
+
+      return token_set
+    end
+
     def get_token_set_from_callback(params)
       data = {
-        grant_type: 'authorization_code',
+        grant_type: @grant_type,
         code: params['code'],
         redirect_uri: @redirect_uri
       }
@@ -160,7 +188,7 @@ module XeroRuby
     end
 
     def validate_state(params)
-      if params[:state] != @state
+      if params['state'] != @state
         raise StandardError.new "WARNING: @config.state: #{@state} and OAuth callback state: #{params['state']} do not match!"
       end
       return true
@@ -222,6 +250,10 @@ module XeroRuby
       response[0]
     end
 
+    def last_connection
+      connections.sort { |a,b| DateTime.parse(a['updatedDateUtc']) <=> DateTime.parse(b['updatedDateUtc'])}.first
+    end
+
     def disconnect(connection_id)
       @config.base_url = 'https://api.xero.com'
       opts = { :header_params => {'Content-Type': 'application/json'}, :auth_names => ['OAuth2'] }
@@ -257,12 +289,16 @@ module XeroRuby
         method_base_url = @config.payroll_uk_url
       when "ProjectApi"
         method_base_url = @config.project_url
+      when "AppStoreApi"
+        method_base_url = @config.app_store_url
+      when "FinanceApi"
+        method_base_url = @config.finance_url
       else
         method_base_url = @config.accounting_url
       end
 
       connection = Faraday.new(:url => method_base_url, :ssl => ssl_options) do |conn|
-        conn.basic_auth(config.username, config.password)
+        conn.request(:basic_auth, config.username, config.password)
         if opts[:header_params]["Content-Type"] == "multipart/form-data"
           conn.request :multipart
           conn.request :url_encoded
@@ -479,6 +515,10 @@ module XeroRuby
           XeroRuby::PayrollNz.const_get(return_type).build_from_hash(data)
         when 'PayrollUkApi'
           XeroRuby::PayrollUk.const_get(return_type).build_from_hash(data)
+        when 'AppStoreApi'
+          XeroRuby::AppStore.const_get(return_type).build_from_hash(data)
+        when 'FinanceApi'
+          XeroRuby::Finance.const_get(return_type).build_from_hash(data)
         else
           XeroRuby::Accounting.const_get(return_type).build_from_hash(data)
         end

@@ -36,31 +36,31 @@ module XeroRuby::Accounting
     
     # The journal source type. The type of transaction that created the journal
     attr_accessor :source_type
-    ACCREC = "ACCREC".freeze
-    ACCPAY = "ACCPAY".freeze
-    ACCRECCREDIT = "ACCRECCREDIT".freeze
-    ACCPAYCREDIT = "ACCPAYCREDIT".freeze
-    ACCRECPAYMENT = "ACCRECPAYMENT".freeze
-    ACCPAYPAYMENT = "ACCPAYPAYMENT".freeze
-    ARCREDITPAYMENT = "ARCREDITPAYMENT".freeze
-    APCREDITPAYMENT = "APCREDITPAYMENT".freeze
-    CASHREC = "CASHREC".freeze
-    CASHPAID = "CASHPAID".freeze
-    TRANSFER = "TRANSFER".freeze
-    ARPREPAYMENT = "ARPREPAYMENT".freeze
-    APPREPAYMENT = "APPREPAYMENT".freeze
-    AROVERPAYMENT = "AROVERPAYMENT".freeze
-    APOVERPAYMENT = "APOVERPAYMENT".freeze
-    EXPCLAIM = "EXPCLAIM".freeze
-    EXPPAYMENT = "EXPPAYMENT".freeze
-    MANJOURNAL = "MANJOURNAL".freeze
-    PAYSLIP = "PAYSLIP".freeze
-    WAGEPAYABLE = "WAGEPAYABLE".freeze
-    INTEGRATEDPAYROLLPE = "INTEGRATEDPAYROLLPE".freeze
-    INTEGRATEDPAYROLLPT = "INTEGRATEDPAYROLLPT".freeze
-    EXTERNALSPENDMONEY = "EXTERNALSPENDMONEY".freeze
-    INTEGRATEDPAYROLLPTPAYMENT = "INTEGRATEDPAYROLLPTPAYMENT".freeze
-    INTEGRATEDPAYROLLCN = "INTEGRATEDPAYROLLCN".freeze
+    ACCREC ||= "ACCREC".freeze
+    ACCPAY ||= "ACCPAY".freeze
+    ACCRECCREDIT ||= "ACCRECCREDIT".freeze
+    ACCPAYCREDIT ||= "ACCPAYCREDIT".freeze
+    ACCRECPAYMENT ||= "ACCRECPAYMENT".freeze
+    ACCPAYPAYMENT ||= "ACCPAYPAYMENT".freeze
+    ARCREDITPAYMENT ||= "ARCREDITPAYMENT".freeze
+    APCREDITPAYMENT ||= "APCREDITPAYMENT".freeze
+    CASHREC ||= "CASHREC".freeze
+    CASHPAID ||= "CASHPAID".freeze
+    TRANSFER ||= "TRANSFER".freeze
+    ARPREPAYMENT ||= "ARPREPAYMENT".freeze
+    APPREPAYMENT ||= "APPREPAYMENT".freeze
+    AROVERPAYMENT ||= "AROVERPAYMENT".freeze
+    APOVERPAYMENT ||= "APOVERPAYMENT".freeze
+    EXPCLAIM ||= "EXPCLAIM".freeze
+    EXPPAYMENT ||= "EXPPAYMENT".freeze
+    MANJOURNAL ||= "MANJOURNAL".freeze
+    PAYSLIP ||= "PAYSLIP".freeze
+    WAGEPAYABLE ||= "WAGEPAYABLE".freeze
+    INTEGRATEDPAYROLLPE ||= "INTEGRATEDPAYROLLPE".freeze
+    INTEGRATEDPAYROLLPT ||= "INTEGRATEDPAYROLLPT".freeze
+    EXTERNALSPENDMONEY ||= "EXTERNALSPENDMONEY".freeze
+    INTEGRATEDPAYROLLPTPAYMENT ||= "INTEGRATEDPAYROLLPTPAYMENT".freeze
+    INTEGRATEDPAYROLLCN ||= "INTEGRATEDPAYROLLCN".freeze
     
     # See JournalLines
     attr_accessor :journal_lines
@@ -343,6 +343,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

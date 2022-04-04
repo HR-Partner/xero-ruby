@@ -102,7 +102,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -166,7 +166,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -230,7 +230,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -294,7 +294,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -358,14 +358,14 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
 
 
 xero_tenant_id = 'xero_tenant_id_example' # String | Xero identifier for Tenant
-employee = { "title":"Mr", "firstName":"Mike", "lastName":"Fancy", "dateOfBirth":"1999-01-01", "address":{ "addressLine1":"101 Green St", "city":"San Francisco", "postCode":"6TGR4F", "country":"UK" }, "email":"mike@starkindustries.com", "gender":"M" } # Employee | 
+employee = { "title":"Mr", "firstName":"Mike", "lastName":"Fancy", "dateOfBirth":"1999-01-01T00:00:00", "gender":"M", "email":"mike@starkindustries.com", "isOffPayrollWorker": false, "address": { "addressLine1": "171 Midsummer", "city": "Milton Keyness", "postCode": "MK9 1EB" } } # Employee | 
 begin
   #Creates employees
   result = api_instance.create_employee(xero_tenant_id, employee)
@@ -422,7 +422,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -488,7 +488,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -554,7 +554,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -620,7 +620,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -686,7 +686,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -752,7 +752,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -818,7 +818,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -882,7 +882,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -948,7 +948,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1012,7 +1012,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1078,7 +1078,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1142,7 +1142,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1206,7 +1206,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1270,7 +1270,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1336,7 +1336,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1401,7 +1401,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1467,7 +1467,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1532,7 +1532,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1596,7 +1596,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1662,7 +1662,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1726,7 +1726,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1793,7 +1793,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1857,7 +1857,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1924,7 +1924,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -1988,7 +1988,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2055,7 +2055,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2119,7 +2119,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2186,7 +2186,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2250,7 +2250,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2316,7 +2316,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2380,7 +2380,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2452,7 +2452,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2516,7 +2516,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2580,7 +2580,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2644,7 +2644,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2708,7 +2708,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2772,7 +2772,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2838,7 +2838,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2907,7 +2907,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -2979,7 +2979,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3043,7 +3043,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3107,7 +3107,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3115,9 +3115,9 @@ api_instance = xero_client.<api_set>
 
 xero_tenant_id = 'xero_tenant_id_example' # String | Xero identifier for Tenant
 opts = {
-  filter: 'firstName==John,lastName==Smith', # String | Filter by first name and/or lastname
+  filter: 'firstName==John,lastName==Smith,isOffPayrollWorker==false', # String | Filter by first name, lastname, and/or whether they are an off-payroll worker
 
-  page: 56 # Integer | Page number which specifies the set of records to retrieve. By default the number of the records per set is 100.
+  page: 5 # Integer | Page number which specifies the set of records to retrieve. By default the number of the records per set is 100.
 }
 
 begin
@@ -3135,7 +3135,7 @@ end
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **xero_tenant_id** | **String**| Xero identifier for Tenant | 
- **filter** | **String**| Filter by first name and/or lastname | [optional] 
+ **filter** | **String**| Filter by first name, lastname, and/or whether they are an off-payroll worker | [optional] 
  **page** | **Integer**| Page number which specifies the set of records to retrieve. By default the number of the records per set is 100. | [optional] 
 
 ### Return type
@@ -3177,7 +3177,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3241,7 +3241,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3311,7 +3311,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3375,7 +3375,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3439,7 +3439,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3506,7 +3506,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3576,7 +3576,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3640,7 +3640,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3709,7 +3709,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3773,7 +3773,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3840,7 +3840,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3902,7 +3902,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -3971,7 +3971,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4035,7 +4035,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4043,9 +4043,17 @@ api_instance = xero_client.<api_set>
 
 xero_tenant_id = 'xero_tenant_id_example' # String | Xero identifier for Tenant
 opts = {
-  page: 56, # Integer | Page number which specifies the set of records to retrieve. By default the number of the records per set is 100.
+  page: 5, # Integer | Page number which specifies the set of records to retrieve. By default the number of the records per set is 100.
 
-  filter: 'employeeId==00000000-0000-0000-0000-000000000000,payrollCalendarId==00000000-0000-0000-0000-000000000000' # String | Filter by first name and/or lastname
+  filter: 'employeeId==00000000-0000-0000-0000-000000000000,payrollCalendarId==00000000-0000-0000-0000-000000000000', # String | Filter by employeeId and/or payrollCalendarId
+
+  status: 'Draft', # String | filter results by any timesheets with a matching timesheet status
+
+  start_date: '2019-01-02', # String | filter results by any timesheets with a startDate on or after the provided date
+
+  end_date: '2020-01-02', # String | filter results by any timesheets with a endDate on or before the provided date
+
+  sort: 'startDate' # String | sort the order of timesheets returned. The default is based on the timesheets createdDate, sorted oldest to newest. Currently, the only other option is to reverse the order based on the timesheets startDate, sorted newest to oldest.
 }
 
 begin
@@ -4064,7 +4072,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **xero_tenant_id** | **String**| Xero identifier for Tenant | 
  **page** | **Integer**| Page number which specifies the set of records to retrieve. By default the number of the records per set is 100. | [optional] 
- **filter** | **String**| Filter by first name and/or lastname | [optional] 
+ **filter** | **String**| Filter by employeeId and/or payrollCalendarId | [optional] 
+ **status** | **String**| filter results by any timesheets with a matching timesheet status | [optional] 
+ **start_date** | **String**| filter results by any timesheets with a startDate on or after the provided date | [optional] 
+ **end_date** | **String**| filter results by any timesheets with a endDate on or before the provided date | [optional] 
+ **sort** | **String**| sort the order of timesheets returned. The default is based on the timesheets createdDate, sorted oldest to newest. Currently, the only other option is to reverse the order based on the timesheets startDate, sorted newest to oldest. | [optional] 
 
 ### Return type
 
@@ -4105,7 +4117,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4167,7 +4179,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4231,7 +4243,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4239,7 +4251,7 @@ api_instance = xero_client.<api_set>
 
 xero_tenant_id = 'xero_tenant_id_example' # String | Xero identifier for Tenant
 employee_id = '4ff1e5cc-9835-40d5-bb18-09fdb118db9c' # String | Employee id for single object
-employee = { "title":"Mr", "firstName":"Mike", "lastName":"Johnllsbkrhwopson", "dateOfBirth":"1999-01-01", "address":{ "addressLine1":"101 Green St", "city":"San Francisco", "postCode":"6TGR4F", "country":"UK" }, "email":"84044@starkindustries.com", "gender":"M" } # Employee | 
+employee = { "title": "Mr.", "firstName": "TestDataUK", "lastName": "Tester", "dateOfBirth": "1992-11-22T00:00:00", "gender": "M", "email": "tester@gmail.com", "phoneNumber": "0400123456", "isOffPayrollWorker": false, "address": { "addressLine1": "171 Midsummer", "city": "Milton Keyness", "postCode": "MK9 1EB" } } # Employee | 
 begin
   #Updates a specific employee's detail
   result = api_instance.update_employee(xero_tenant_id, employee_id, employee)
@@ -4297,7 +4309,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4365,7 +4377,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4433,7 +4445,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4499,7 +4511,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4567,7 +4579,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 
@@ -4633,7 +4645,7 @@ token_set = fetch_valid_token_set(user) # example
 xero_client.refresh_token_set(token_set)
 
 # You need to namespace your api method call to one of the following api sets
-# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api]
+# [:accounting_api, :assets_api, :projects_api, :files_api, :payroll_au_api, :payroll_nz_api, :payroll_uk_api, :app_store_api]
 
 api_instance = xero_client.<api_set>
 

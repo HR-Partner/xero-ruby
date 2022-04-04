@@ -42,14 +42,14 @@ module XeroRuby::PayrollNz
     
     # The current status of the corresponding salary and wages
     attr_accessor :status
-    ACTIVE = "Active".freeze
-    PENDING = "Pending".freeze
-    HISTORY = "History".freeze
+    ACTIVE ||= "Active".freeze
+    PENDING ||= "Pending".freeze
+    HISTORY ||= "History".freeze
     
     # The type of the payment of the corresponding salary and wages
     attr_accessor :payment_type
-    SALARY = "Salary".freeze
-    HOURLY = "Hourly".freeze
+    SALARY ||= "Salary".freeze
+    HOURLY ||= "Hourly".freeze
     
     class EnumAttributeValidator
       attr_reader :datatype
@@ -388,6 +388,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

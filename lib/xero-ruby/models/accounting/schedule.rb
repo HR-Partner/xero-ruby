@@ -21,20 +21,20 @@ module XeroRuby::Accounting
     
     # One of the following - WEEKLY or MONTHLY
     attr_accessor :unit
-    WEEKLY = "WEEKLY".freeze
-    MONTHLY = "MONTHLY".freeze
+    WEEKLY ||= "WEEKLY".freeze
+    MONTHLY ||= "MONTHLY".freeze
     
     # Integer used with due date type e.g 20 (of following month), 31 (of current month)
     attr_accessor :due_date
     
     # the payment terms
     attr_accessor :due_date_type
-    DAYSAFTERBILLDATE = "DAYSAFTERBILLDATE".freeze
-    DAYSAFTERBILLMONTH = "DAYSAFTERBILLMONTH".freeze
-    DAYSAFTERINVOICEDATE = "DAYSAFTERINVOICEDATE".freeze
-    DAYSAFTERINVOICEMONTH = "DAYSAFTERINVOICEMONTH".freeze
-    OFCURRENTMONTH = "OFCURRENTMONTH".freeze
-    OFFOLLOWINGMONTH = "OFFOLLOWINGMONTH".freeze
+    DAYSAFTERBILLDATE ||= "DAYSAFTERBILLDATE".freeze
+    DAYSAFTERBILLMONTH ||= "DAYSAFTERBILLMONTH".freeze
+    DAYSAFTERINVOICEDATE ||= "DAYSAFTERINVOICEDATE".freeze
+    DAYSAFTERINVOICEMONTH ||= "DAYSAFTERINVOICEMONTH".freeze
+    OFCURRENTMONTH ||= "OFCURRENTMONTH".freeze
+    OFFOLLOWINGMONTH ||= "OFFOLLOWINGMONTH".freeze
     
     # Date the first invoice of the current version of the repeating schedule was generated (changes when repeating invoice is edited)
     attr_accessor :start_date
@@ -326,6 +326,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

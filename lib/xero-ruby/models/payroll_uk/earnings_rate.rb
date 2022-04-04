@@ -24,35 +24,35 @@ module XeroRuby::PayrollUk
     
     # Indicates how an employee will be paid when taking this type of earning
     attr_accessor :earnings_type
-    ALLOWANCE = "Allowance".freeze
-    BACKPAY = "Backpay".freeze
-    BONUS = "Bonus".freeze
-    COMMISSION = "Commission".freeze
-    LUMP_SUM = "LumpSum".freeze
-    OTHER_EARNINGS = "OtherEarnings".freeze
-    OVERTIME_EARNINGS = "OvertimeEarnings".freeze
-    REGULAR_EARNINGS = "RegularEarnings".freeze
-    STATUTORY_ADOPTION_PAY = "StatutoryAdoptionPay".freeze
-    STATUTORY_ADOPTION_PAY_NON_PENSIONABLE = "StatutoryAdoptionPayNonPensionable".freeze
-    STATUTORY_BEREAVEMENT_PAY = "StatutoryBereavementPay".freeze
-    STATUTORY_MATERNITY_PAY = "StatutoryMaternityPay".freeze
-    STATUTORY_MATERNITY_PAY_NON_PENSIONABLE = "StatutoryMaternityPayNonPensionable".freeze
-    STATUTORY_PATERNITY_PAY = "StatutoryPaternityPay".freeze
-    STATUTORY_PATERNITY_PAY_NON_PENSIONABLE = "StatutoryPaternityPayNonPensionable".freeze
-    STATUTORY_PARENTAL_BEREAVEMENT_PAY_NON_PENSIONABLE = "StatutoryParentalBereavementPayNonPensionable".freeze
-    STATUTORY_SHARED_PARENTAL_PAY = "StatutorySharedParentalPay".freeze
-    STATUTORY_SHARED_PARENTAL_PAY_NON_PENSIONABLE = "StatutorySharedParentalPayNonPensionable".freeze
-    STATUTORY_SICK_PAY = "StatutorySickPay".freeze
-    STATUTORY_SICK_PAY_NON_PENSIONABLE = "StatutorySickPayNonPensionable".freeze
-    TIPS_DIRECT = "Tips(Direct)".freeze
-    TIPS_NON_DIRECT = "Tips(Non-Direct)".freeze
-    TERMINATION_PAY = "TerminationPay".freeze
+    ALLOWANCE ||= "Allowance".freeze
+    BACKPAY ||= "Backpay".freeze
+    BONUS ||= "Bonus".freeze
+    COMMISSION ||= "Commission".freeze
+    LUMP_SUM ||= "LumpSum".freeze
+    OTHER_EARNINGS ||= "OtherEarnings".freeze
+    OVERTIME_EARNINGS ||= "OvertimeEarnings".freeze
+    REGULAR_EARNINGS ||= "RegularEarnings".freeze
+    STATUTORY_ADOPTION_PAY ||= "StatutoryAdoptionPay".freeze
+    STATUTORY_ADOPTION_PAY_NON_PENSIONABLE ||= "StatutoryAdoptionPayNonPensionable".freeze
+    STATUTORY_BEREAVEMENT_PAY ||= "StatutoryBereavementPay".freeze
+    STATUTORY_MATERNITY_PAY ||= "StatutoryMaternityPay".freeze
+    STATUTORY_MATERNITY_PAY_NON_PENSIONABLE ||= "StatutoryMaternityPayNonPensionable".freeze
+    STATUTORY_PATERNITY_PAY ||= "StatutoryPaternityPay".freeze
+    STATUTORY_PATERNITY_PAY_NON_PENSIONABLE ||= "StatutoryPaternityPayNonPensionable".freeze
+    STATUTORY_PARENTAL_BEREAVEMENT_PAY_NON_PENSIONABLE ||= "StatutoryParentalBereavementPayNonPensionable".freeze
+    STATUTORY_SHARED_PARENTAL_PAY ||= "StatutorySharedParentalPay".freeze
+    STATUTORY_SHARED_PARENTAL_PAY_NON_PENSIONABLE ||= "StatutorySharedParentalPayNonPensionable".freeze
+    STATUTORY_SICK_PAY ||= "StatutorySickPay".freeze
+    STATUTORY_SICK_PAY_NON_PENSIONABLE ||= "StatutorySickPayNonPensionable".freeze
+    TIPS_NON_DIRECT ||= "TipsNonDirect".freeze
+    TIPS_DIRECT ||= "TipsDirect".freeze
+    TERMINATION_PAY ||= "TerminationPay".freeze
     
     # Indicates the type of the earning rate
     attr_accessor :rate_type
-    RATE_PER_UNIT = "RatePerUnit".freeze
-    MULTIPLE_OF_ORDINARY_EARNINGS_RATE = "MultipleOfOrdinaryEarningsRate".freeze
-    FIXED_AMOUNT = "FixedAmount".freeze
+    RATE_PER_UNIT ||= "RatePerUnit".freeze
+    MULTIPLE_OF_ORDINARY_EARNINGS_RATE ||= "MultipleOfOrdinaryEarningsRate".freeze
+    FIXED_AMOUNT ||= "FixedAmount".freeze
     
     # The type of units used to record earnings
     attr_accessor :type_of_units
@@ -214,7 +214,7 @@ module XeroRuby::PayrollUk
     def valid?
       return false if @name.nil?
       return false if @earnings_type.nil?
-      earnings_type_validator = EnumAttributeValidator.new('String', ["Allowance", "Backpay", "Bonus", "Commission", "LumpSum", "OtherEarnings", "OvertimeEarnings", "RegularEarnings", "StatutoryAdoptionPay", "StatutoryAdoptionPayNonPensionable", "StatutoryBereavementPay", "StatutoryMaternityPay", "StatutoryMaternityPayNonPensionable", "StatutoryPaternityPay", "StatutoryPaternityPayNonPensionable", "StatutoryParentalBereavementPayNonPensionable", "StatutorySharedParentalPay", "StatutorySharedParentalPayNonPensionable", "StatutorySickPay", "StatutorySickPayNonPensionable", "Tips(Direct)", "Tips(Non-Direct)", "TerminationPay"])
+      earnings_type_validator = EnumAttributeValidator.new('String', ["Allowance", "Backpay", "Bonus", "Commission", "LumpSum", "OtherEarnings", "OvertimeEarnings", "RegularEarnings", "StatutoryAdoptionPay", "StatutoryAdoptionPayNonPensionable", "StatutoryBereavementPay", "StatutoryMaternityPay", "StatutoryMaternityPayNonPensionable", "StatutoryPaternityPay", "StatutoryPaternityPayNonPensionable", "StatutoryParentalBereavementPayNonPensionable", "StatutorySharedParentalPay", "StatutorySharedParentalPayNonPensionable", "StatutorySickPay", "StatutorySickPayNonPensionable", "TipsNonDirect", "TipsDirect", "TerminationPay"])
       return false unless earnings_type_validator.valid?(@earnings_type)
       return false if @rate_type.nil?
       rate_type_validator = EnumAttributeValidator.new('String', ["RatePerUnit", "MultipleOfOrdinaryEarningsRate", "FixedAmount"])
@@ -227,7 +227,7 @@ module XeroRuby::PayrollUk
     # Custom attribute writer method checking allowed values (enum).
     # @param [Object] earnings_type Object to be assigned
     def earnings_type=(earnings_type)
-      validator = EnumAttributeValidator.new('String', ["Allowance", "Backpay", "Bonus", "Commission", "LumpSum", "OtherEarnings", "OvertimeEarnings", "RegularEarnings", "StatutoryAdoptionPay", "StatutoryAdoptionPayNonPensionable", "StatutoryBereavementPay", "StatutoryMaternityPay", "StatutoryMaternityPayNonPensionable", "StatutoryPaternityPay", "StatutoryPaternityPayNonPensionable", "StatutoryParentalBereavementPayNonPensionable", "StatutorySharedParentalPay", "StatutorySharedParentalPayNonPensionable", "StatutorySickPay", "StatutorySickPayNonPensionable", "Tips(Direct)", "Tips(Non-Direct)", "TerminationPay"])
+      validator = EnumAttributeValidator.new('String', ["Allowance", "Backpay", "Bonus", "Commission", "LumpSum", "OtherEarnings", "OvertimeEarnings", "RegularEarnings", "StatutoryAdoptionPay", "StatutoryAdoptionPayNonPensionable", "StatutoryBereavementPay", "StatutoryMaternityPay", "StatutoryMaternityPayNonPensionable", "StatutoryPaternityPay", "StatutoryPaternityPayNonPensionable", "StatutoryParentalBereavementPayNonPensionable", "StatutorySharedParentalPay", "StatutorySharedParentalPayNonPensionable", "StatutorySickPay", "StatutorySickPayNonPensionable", "TipsNonDirect", "TipsDirect", "TerminationPay"])
       unless validator.valid?(earnings_type)
         fail ArgumentError, "invalid value for \"earnings_type\", must be one of #{validator.allowable_values}."
       end
@@ -399,6 +399,8 @@ module XeroRuby::PayrollUk
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

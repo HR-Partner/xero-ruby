@@ -39,14 +39,14 @@ module XeroRuby::PayrollNz
     
     # Pay run status
     attr_accessor :pay_run_status
-    DRAFT = "Draft".freeze
-    POSTED = "Posted".freeze
+    DRAFT ||= "Draft".freeze
+    POSTED ||= "Posted".freeze
     
     # Pay run type
     attr_accessor :pay_run_type
-    SCHEDULED = "Scheduled".freeze
-    UNSCHEDULED = "Unscheduled".freeze
-    EARLIER_YEAR_UPDATE = "EarlierYearUpdate".freeze
+    SCHEDULED ||= "Scheduled".freeze
+    UNSCHEDULED ||= "Unscheduled".freeze
+    EARLIER_YEAR_UPDATE ||= "EarlierYearUpdate".freeze
     
 
     attr_accessor :calendar_type
@@ -375,6 +375,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

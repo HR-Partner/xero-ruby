@@ -18,9 +18,9 @@ module XeroRuby::Accounting
   class Overpayment
     # See Overpayment Types
     attr_accessor :type
-    RECEIVE_OVERPAYMENT = "RECEIVE-OVERPAYMENT".freeze
-    SPEND_OVERPAYMENT = "SPEND-OVERPAYMENT".freeze
-    AROVERPAYMENT = "AROVERPAYMENT".freeze
+    RECEIVE_OVERPAYMENT ||= "RECEIVE-OVERPAYMENT".freeze
+    SPEND_OVERPAYMENT ||= "SPEND-OVERPAYMENT".freeze
+    AROVERPAYMENT ||= "AROVERPAYMENT".freeze
     
 
     attr_accessor :contact
@@ -30,9 +30,9 @@ module XeroRuby::Accounting
     
     # See Overpayment Status Codes
     attr_accessor :status
-    AUTHORISED = "AUTHORISED".freeze
-    PAID = "PAID".freeze
-    VOIDED = "VOIDED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    PAID ||= "PAID".freeze
+    VOIDED ||= "VOIDED".freeze
     
 
     attr_accessor :line_amount_types
@@ -454,6 +454,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

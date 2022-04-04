@@ -24,16 +24,16 @@ module XeroRuby::PayrollUk
     
     # Deduction Category type
     attr_accessor :deduction_category
-    CAPITAL_CONTRIBUTIONS = "CapitalContributions".freeze
-    CHILD_CARE_VOUCHER = "ChildCareVoucher".freeze
-    MAKING_GOOD = "MakingGood".freeze
-    POSTGRADUATE_LOAN_DEDUCTIONS = "PostgraduateLoanDeductions".freeze
-    PRIVATE_USE_PAYMENTS = "PrivateUsePayments".freeze
-    SALARY_SACRIFICE = "SalarySacrifice".freeze
-    STAKEHOLDER_PENSION = "StakeholderPension".freeze
-    STAKEHOLDER_PENSION_POST_TAX = "StakeholderPensionPostTax".freeze
-    STUDENT_LOAN_DEDUCTIONS = "StudentLoanDeductions".freeze
-    UK_OTHER = "UkOther".freeze
+    CAPITAL_CONTRIBUTIONS ||= "CapitalContributions".freeze
+    CHILD_CARE_VOUCHER ||= "ChildCareVoucher".freeze
+    MAKING_GOOD ||= "MakingGood".freeze
+    POSTGRADUATE_LOAN_DEDUCTIONS ||= "PostgraduateLoanDeductions".freeze
+    PRIVATE_USE_PAYMENTS ||= "PrivateUsePayments".freeze
+    SALARY_SACRIFICE ||= "SalarySacrifice".freeze
+    STAKEHOLDER_PENSION ||= "StakeholderPension".freeze
+    STAKEHOLDER_PENSION_POST_TAX ||= "StakeholderPensionPostTax".freeze
+    STUDENT_LOAN_DEDUCTIONS ||= "StudentLoanDeductions".freeze
+    UK_OTHER ||= "UkOther".freeze
     
     # Xero identifier for Liability Account
     attr_accessor :liability_account_id
@@ -52,8 +52,8 @@ module XeroRuby::PayrollUk
     
     # determine the calculation type whether fixed amount or percentage of gross
     attr_accessor :calculation_type
-    FIXED_AMOUNT = "FixedAmount".freeze
-    PERCENTAGE_OF_GROSS = "PercentageOfGross".freeze
+    FIXED_AMOUNT ||= "FixedAmount".freeze
+    PERCENTAGE_OF_GROSS ||= "PercentageOfGross".freeze
     
     # Percentage of gross
     attr_accessor :percentage
@@ -430,6 +430,8 @@ module XeroRuby::PayrollUk
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

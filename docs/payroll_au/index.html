@@ -917,11 +917,17 @@ ul.nav-tabs {
   "description" : "See Account Types",
   "enum" : [ "BANK", "CURRENT", "CURRLIAB", "DEPRECIATN", "DIRECTCOSTS", "EQUITY", "EXPENSE", "FIXED", "INVENTORY", "LIABILITY", "NONCURRENT", "OTHERINCOME", "OVERHEADS", "PREPAYMENT", "REVENUE", "SALES", "TERMLIAB", "PAYGLIABILITY", "PAYG", "SUPERANNUATIONEXPENSE", "SUPERANNUATIONLIABILITY", "WAGESEXPENSE", "WAGESPAYABLELIABILITY" ]
 };
+      defs["AllowanceCategory"] = {
+  "title" : "",
+  "type" : "string",
+  "description" : "",
+  "enum" : [ "NONDEDUCTIBLE", "UNIFORM", "PRIVATEVEHICLE", "HOMEOFFICE", "TRANSPORT", "GENERAL", "OTHER" ]
+};
       defs["AllowanceType"] = {
   "title" : "",
   "type" : "string",
   "description" : "",
-  "enum" : [ "CAR", "TRANSPORT", "TRAVEL", "LAUNDRY", "MEALS", "JOBKEEPER", "OTHER" ]
+  "enum" : [ "CAR", "TRANSPORT", "LAUNDRY", "MEALS", "TRAVEL", "OTHER", "JOBKEEPER", "TOOLS", "TASKS", "QUALIFICATIONS" ]
 };
       defs["BankAccount"] = {
   "title" : "",
@@ -1222,6 +1228,9 @@ ul.nav-tabs {
     },
     "AllowanceType" : {
       "$ref" : "#/components/schemas/AllowanceType"
+    },
+    "AllowanceCategory" : {
+      "$ref" : "#/components/schemas/AllowanceCategory"
     }
   },
   "description" : ""
@@ -1236,7 +1245,7 @@ ul.nav-tabs {
   "title" : "",
   "type" : "string",
   "description" : "",
-  "enum" : [ "FIXED", "ORDINARYTIMEEARNINGS", "OVERTIMEEARNINGS", "ALLOWANCE", "LUMPSUMD", "EMPLOYMENTTERMINATIONPAYMENT", "LUMPSUMA", "LUMPSUMB", "BONUSESANDCOMMISSIONS", "LUMPSUME" ]
+  "enum" : [ "FIXED", "ORDINARYTIMEEARNINGS", "OVERTIMEEARNINGS", "ALLOWANCE", "LUMPSUMD", "EMPLOYMENTTERMINATIONPAYMENT", "LUMPSUMA", "LUMPSUMB", "BONUSESANDCOMMISSIONS", "LUMPSUME", "LUMPSUMW", "DIRECTORSFEES" ]
 };
       defs["Employee"] = {
   "title" : "",
@@ -1351,6 +1360,12 @@ ul.nav-tabs {
       "description" : "Employee Termination Date (YYYY-MM-DD)",
       "example" : "/Date(1584662400000+0000)/",
       "x-is-msdate" : true
+    },
+    "TerminationReason" : {
+      "type" : "string",
+      "description" : "* `V` Voluntary cessation - An employee resignation, retirement, domestic or pressing necessity or abandonment of employment\n* `I` Ill health - An employee resignation due to medical condition that prevents the continuation of employment, such as for illness, ill-health, medical unfitness or total permanent disability\n* `D` Deceased - The death of an employee\n* `R` Redundancy - An employer-initiated termination of employment due to a genuine redundancy or approved early retirement scheme\n* `F` Dismissal - An employer-initiated termination of employment due to dismissal, inability to perform the required work, misconduct or inefficiency\n* `C` Contract cessation - The natural conclusion of a limited employment relationship due to contract/engagement duration or task completion, seasonal work completion, or to cease casuals that are no longer required\n* `T` Transfer - The administrative arrangements performed to transfer employees across payroll systems, move them temporarily to another employer (machinery of government for public servants), transfer of business, move them to outsourcing arrangements or other such technical activities.\n",
+      "example" : "F",
+      "enum" : [ "V", "I", "D", "R", "F", "C", "T" ]
     },
     "BankAccounts" : {
       "type" : "array",
@@ -1812,7 +1827,7 @@ ul.nav-tabs {
   "title" : "",
   "type" : "string",
   "description" : "",
-  "enum" : [ "PAYGMANUAL", "ETPOMANUAL", "ETPRMANUAL", "SCHEDULE5MANUAL", "SCHEDULE5STSLMANUAL" ]
+  "enum" : [ "PAYGMANUAL", "ETPOMANUAL", "ETPRMANUAL", "SCHEDULE5MANUAL", "SCHEDULE5STSLMANUAL", "SCHEDULE4MANUAL" ]
 };
       defs["OpeningBalances"] = {
   "title" : "",
@@ -2112,6 +2127,12 @@ ul.nav-tabs {
       "readOnly" : true,
       "example" : "/Date(1583967733054+0000)/",
       "x-is-msdate-time" : true
+    },
+    "ReferenceDate" : {
+      "type" : "string",
+      "description" : "Reference Date (YYYY-MM-DD)",
+      "example" : "/Date(322560000000+0000)/",
+      "x-is-msdate" : true
     },
     "ValidationErrors" : {
       "type" : "array",
@@ -3161,7 +3182,7 @@ ul.nav-tabs {
     <div class='docs-header'>
       <div class='xero-logo'>
         <a target="_blank"  href="https://developer.xero.com/documentation/">
-        <img alt="" width="115" height="30" class="xrh-app-image" src="https://developer.xero.com/static/images/developer-logo.svg">
+        <img alt="" width="115" height="30" class="xrh-app-image" src="https://i.imgur.com/kzfh8mf.png">
         </a>
       </div>
       <fieldset class='api-set'>
@@ -3190,6 +3211,8 @@ ul.nav-tabs {
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_au/index.html" value="PayrollAu">Payroll (AU)</option>
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_uk/index.html" value="PayrollUk">Payroll (UK)</option>
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_nz/index.html" value="PayrollNz">Payroll (NZ)</option>
+          <option data-url="https://xeroapi.github.io/xero-ruby/app_store/index.html" value="AppStore">App Store</option>
+          <option data-url="https://xeroapi.github.io/xero-ruby/finance/index.html" value="Finance">Finance</option>
         </select>
       </fieldset>
       <div class='api-set-wrapper'>
@@ -3231,7 +3254,7 @@ ul.nav-tabs {
           <nav id="scrollingNav">
             <ul class="sidenav nav nav-list">
               <li class="nav-header" data-group="PayrollAu"><strong>SDK: </strong><span id='sdk-name'></span></li>
-              <li class="nav-header" data-group="PayrollAu"><strong>VSN: </strong>3.1.0</li>
+              <li class="nav-header" data-group="PayrollAu"><strong>VSN: </strong>3.7.1</li>
               <li class="nav-header" data-group="PayrollAu"><a href="#api-PayrollAu">Methods</a></li>
               <li data-group="PayrollAu" data-name="createEmployee" class="">
                 <a href="#api-PayrollAu-createEmployee">createEmployee</a>
@@ -3521,8 +3544,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.leaveapplications</td>
-                      <td>Grant read-write access to payroll leaveapplications</td>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
                     </tr>
                     
                   </table>
@@ -3681,8 +3704,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.payitems</td>
-                      <td>Grant read-write access to payroll payitems</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -3929,8 +3952,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.payrollcalendars</td>
-                      <td>Grant read-write access to payroll calendars</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -4052,8 +4075,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.superfunds</td>
-                      <td>Grant read-write access to payroll superfunds</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -4298,6 +4321,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                    <tr>
                       <td>payroll.employees.read</td>
                       <td>Grant read-only access to payroll employees</td>
                     </tr>
@@ -4396,7 +4424,7 @@ Xero identifier for Tenant
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -4412,6 +4440,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
                     
                     <tr>
                       <td>payroll.employees.read</td>
@@ -4457,8 +4490,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -4581,8 +4617,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.leaveapplications.read</td>
-                      <td>Grant read-only access to payroll leaveapplications</td>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.employees.read</td>
+                      <td>Grant read-only access to payroll employees</td>
                     </tr>
                     
                   </table>
@@ -4679,7 +4720,7 @@ Xero identifier for Tenant
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -4697,8 +4738,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.leaveapplications.read</td>
-                      <td>Grant read-only access to payroll leaveapplications</td>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.employees.read</td>
+                      <td>Grant read-only access to payroll employees</td>
                     </tr>
                     
                   </table>
@@ -4740,8 +4786,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -4849,7 +4898,7 @@ e.g. page=1 – Up to 100 objects will be returned in a single API call
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -4867,8 +4916,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.payitems.read</td>
-                      <td>Grant read-only access to payroll payitems</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -4910,8 +4964,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -5034,6 +5091,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>payroll.payruns</td>
+                      <td>Grant read-write access to payroll payruns</td>
+                    </tr>
+                    
+                    <tr>
                       <td>payroll.payruns.read</td>
                       <td>Grant read-only access to payroll payruns</td>
                     </tr>
@@ -5132,7 +5194,7 @@ Xero identifier for Tenant
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -5148,6 +5210,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>payroll.payruns</td>
+                      <td>Grant read-write access to payroll payruns</td>
+                    </tr>
                     
                     <tr>
                       <td>payroll.payruns.read</td>
@@ -5193,8 +5260,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -5317,8 +5387,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.payrollcalendars.read</td>
-                      <td>Grant read-only access to payroll calendars</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -5415,7 +5490,7 @@ Xero identifier for Tenant
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -5433,8 +5508,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.payrollcalendars.read</td>
-                      <td>Grant read-only access to payroll calendars</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -5476,8 +5556,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -5600,6 +5683,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>payroll.payslip</td>
+                      <td>Grant read-write access to payroll payslips</td>
+                    </tr>
+                    
+                    <tr>
                       <td>payroll.payslip.read</td>
                       <td>Grant read-only access to payroll payslips</td>
                     </tr>
@@ -5712,6 +5800,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>payroll.settings.read</td>
                       <td>Grant read-only access to payroll settings</td>
                     </tr>
@@ -5792,8 +5885,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.superfunds.read</td>
-                      <td>Grant read-only access to payroll superfunds</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -5906,8 +6004,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.superfundproducts.read</td>
-                      <td>Grant read-only access to payroll superfundproducts</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -6018,7 +6121,7 @@ The USI of the Regulated SuperFund
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -6036,8 +6139,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.superfunds.read</td>
-                      <td>Grant read-only access to payroll superfunds</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>payroll.settings.read</td>
+                      <td>Grant read-only access to payroll settings</td>
                     </tr>
                     
                   </table>
@@ -6079,8 +6187,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -6203,6 +6314,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>payroll.timesheets</td>
+                      <td>Grant read-write access to payroll timesheets</td>
+                    </tr>
+                    
+                    <tr>
                       <td>payroll.timesheets.read</td>
                       <td>Grant read-only access to payroll timesheets</td>
                     </tr>
@@ -6301,7 +6417,7 @@ Xero identifier for Tenant
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xeroTenantId = 'xeroTenantId_example'
-ifModifiedSince = 'ifModifiedSince_example'
+ifModifiedSince = "2020-02-06T12:17:43.202-08:00"
 where = 'Status=="ACTIVE"'
 order = 'EmailAddress%20DESC'
 page = 56
@@ -6317,6 +6433,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>payroll.timesheets</td>
+                      <td>Grant read-write access to payroll timesheets</td>
+                    </tr>
                     
                     <tr>
                       <td>payroll.timesheets.read</td>
@@ -6362,8 +6483,11 @@ Xero identifier for Tenant
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
-                    String
+                    Date
                 </span>
+                    <span class="format">
+                        (date-time)
+                    </span>
 
                     <div class="inner description marked">
 Only records created or modified since this timestamp will be returned
@@ -6659,8 +6783,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.leaveapplications</td>
-                      <td>Grant read-write access to payroll leaveapplications</td>
+                      <td>payroll.employees</td>
+                      <td>Grant read-write access to payroll employees</td>
                     </tr>
                     
                   </table>
@@ -7130,8 +7254,8 @@ end
                   <table>
                     
                     <tr>
-                      <td>payroll.superfunds</td>
-                      <td>Grant read-write access to payroll superfunds</td>
+                      <td>payroll.settings</td>
+                      <td>Grant read-write access to payroll settings</td>
                     </tr>
                     
                   </table>

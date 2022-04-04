@@ -45,11 +45,11 @@ module XeroRuby::Accounting
     
     # See Purchase Order Status Codes
     attr_accessor :status
-    DRAFT = "DRAFT".freeze
-    SUBMITTED = "SUBMITTED".freeze
-    AUTHORISED = "AUTHORISED".freeze
-    BILLED = "BILLED".freeze
-    DELETED = "DELETED".freeze
+    DRAFT ||= "DRAFT".freeze
+    SUBMITTED ||= "SUBMITTED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    BILLED ||= "BILLED".freeze
+    DELETED ||= "DELETED".freeze
     
     # Boolean to set whether the purchase order should be marked as “sent”. This can be set only on purchase orders that have been approved or billed
     attr_accessor :sent_to_contact
@@ -531,6 +531,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end
