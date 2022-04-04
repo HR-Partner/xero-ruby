@@ -18,14 +18,14 @@ module XeroRuby::Accounting
   class Invoice
     # See Invoice Types
     attr_accessor :type
-    ACCPAY = "ACCPAY".freeze
-    ACCPAYCREDIT = "ACCPAYCREDIT".freeze
-    APOVERPAYMENT = "APOVERPAYMENT".freeze
-    APPREPAYMENT = "APPREPAYMENT".freeze
-    ACCREC = "ACCREC".freeze
-    ACCRECCREDIT = "ACCRECCREDIT".freeze
-    AROVERPAYMENT = "AROVERPAYMENT".freeze
-    ARPREPAYMENT = "ARPREPAYMENT".freeze
+    ACCPAY ||= "ACCPAY".freeze
+    ACCPAYCREDIT ||= "ACCPAYCREDIT".freeze
+    APOVERPAYMENT ||= "APOVERPAYMENT".freeze
+    APPREPAYMENT ||= "APPREPAYMENT".freeze
+    ACCREC ||= "ACCREC".freeze
+    ACCRECCREDIT ||= "ACCRECCREDIT".freeze
+    AROVERPAYMENT ||= "AROVERPAYMENT".freeze
+    ARPREPAYMENT ||= "ARPREPAYMENT".freeze
     
 
     attr_accessor :contact
@@ -62,12 +62,12 @@ module XeroRuby::Accounting
     
     # See Invoice Status Codes
     attr_accessor :status
-    DRAFT = "DRAFT".freeze
-    SUBMITTED = "SUBMITTED".freeze
-    DELETED = "DELETED".freeze
-    AUTHORISED = "AUTHORISED".freeze
-    PAID = "PAID".freeze
-    VOIDED = "VOIDED".freeze
+    DRAFT ||= "DRAFT".freeze
+    SUBMITTED ||= "SUBMITTED".freeze
+    DELETED ||= "DELETED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    PAID ||= "PAID".freeze
+    VOIDED ||= "VOIDED".freeze
     
     # Boolean to set whether the invoice in the Xero app should be marked as “sent”. This can be set only on invoices that have been approved
     attr_accessor :sent_to_contact
@@ -697,6 +697,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

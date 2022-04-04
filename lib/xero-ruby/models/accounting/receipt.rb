@@ -48,11 +48,11 @@ module XeroRuby::Accounting
     
     # Current status of receipt – see status types
     attr_accessor :status
-    DRAFT = "DRAFT".freeze
-    SUBMITTED = "SUBMITTED".freeze
-    AUTHORISED = "AUTHORISED".freeze
-    DECLINED = "DECLINED".freeze
-    VOIDED = "VOIDED".freeze
+    DRAFT ||= "DRAFT".freeze
+    SUBMITTED ||= "SUBMITTED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    DECLINED ||= "DECLINED".freeze
+    VOIDED ||= "VOIDED".freeze
     
     # Xero generated sequence number for receipt in current claim for a given user
     attr_accessor :receipt_number
@@ -431,6 +431,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

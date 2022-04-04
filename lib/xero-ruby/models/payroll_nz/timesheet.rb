@@ -33,10 +33,10 @@ module XeroRuby::PayrollNz
     
     # Status of the timesheet
     attr_accessor :status
-    DRAFT = "Draft".freeze
-    APPROVED = "Approved".freeze
-    COMPLETED = "Completed".freeze
-    REQUESTED = "Requested".freeze
+    DRAFT ||= "Draft".freeze
+    APPROVED ||= "Approved".freeze
+    COMPLETED ||= "Completed".freeze
+    REQUESTED ||= "Requested".freeze
     
     # The Total Hours of the Timesheet
     attr_accessor :total_hours
@@ -352,6 +352,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

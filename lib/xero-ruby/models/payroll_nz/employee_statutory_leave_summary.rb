@@ -24,11 +24,11 @@ module XeroRuby::PayrollNz
     
     # The category of statutory leave
     attr_accessor :type
-    SICK = "Sick".freeze
-    ADOPTION = "Adoption".freeze
-    MATERNITY = "Maternity".freeze
-    PATERNITY = "Paternity".freeze
-    SHAREDPARENTAL = "Sharedparental".freeze
+    SICK ||= "Sick".freeze
+    ADOPTION ||= "Adoption".freeze
+    MATERNITY ||= "Maternity".freeze
+    PATERNITY ||= "Paternity".freeze
+    SHAREDPARENTAL ||= "Sharedparental".freeze
     
     # The date when the leave starts
     attr_accessor :start_date
@@ -41,9 +41,9 @@ module XeroRuby::PayrollNz
     
     # The status of the leave
     attr_accessor :status
-    PENDING = "Pending".freeze
-    IN_PROGRESS = "In-Progress".freeze
-    COMPLETED = "Completed".freeze
+    PENDING ||= "Pending".freeze
+    IN_PROGRESS ||= "In-Progress".freeze
+    COMPLETED ||= "Completed".freeze
     
     class EnumAttributeValidator
       attr_reader :datatype
@@ -326,6 +326,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

@@ -18,11 +18,11 @@ module XeroRuby::Accounting
   class Phone
 
     attr_accessor :phone_type
-    DEFAULT = "DEFAULT".freeze
-    DDI = "DDI".freeze
-    MOBILE = "MOBILE".freeze
-    FAX = "FAX".freeze
-    OFFICE = "OFFICE".freeze
+    DEFAULT ||= "DEFAULT".freeze
+    DDI ||= "DDI".freeze
+    MOBILE ||= "MOBILE".freeze
+    FAX ||= "FAX".freeze
+    OFFICE ||= "OFFICE".freeze
     
     # max length = 50
     attr_accessor :phone_number
@@ -326,6 +326,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

@@ -21,8 +21,8 @@ module XeroRuby::Accounting
     
     # The Status of a contact group. To delete a contact group update the status to DELETED. Only contact groups with a status of ACTIVE are returned on GETs.
     attr_accessor :status
-    ACTIVE = "ACTIVE".freeze
-    DELETED = "DELETED".freeze
+    ACTIVE ||= "ACTIVE".freeze
+    DELETED ||= "DELETED".freeze
     
     # The Xero identifier for an contact group – specified as a string following the endpoint name. e.g. /297c2dc5-cc47-4afd-8ec8-74990b8761e9
     attr_accessor :contact_group_id
@@ -280,6 +280,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

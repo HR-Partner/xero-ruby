@@ -49,6 +49,9 @@ module XeroRuby::Accounting
     # The amount of the payment. Must be less than or equal to the outstanding amount owing on the invoice e.g. 200.00
     attr_accessor :amount
     
+    # The amount of the payment in the currency of the bank account.
+    attr_accessor :bank_amount
+    
     # An optional description for the payment e.g. Direct Debit
     attr_accessor :reference
     
@@ -57,19 +60,19 @@ module XeroRuby::Accounting
     
     # The status of the payment.
     attr_accessor :status
-    AUTHORISED = "AUTHORISED".freeze
-    DELETED = "DELETED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    DELETED ||= "DELETED".freeze
     
     # See Payment Types.
     attr_accessor :payment_type
-    ACCRECPAYMENT = "ACCRECPAYMENT".freeze
-    ACCPAYPAYMENT = "ACCPAYPAYMENT".freeze
-    ARCREDITPAYMENT = "ARCREDITPAYMENT".freeze
-    APCREDITPAYMENT = "APCREDITPAYMENT".freeze
-    AROVERPAYMENTPAYMENT = "AROVERPAYMENTPAYMENT".freeze
-    ARPREPAYMENTPAYMENT = "ARPREPAYMENTPAYMENT".freeze
-    APPREPAYMENTPAYMENT = "APPREPAYMENTPAYMENT".freeze
-    APOVERPAYMENTPAYMENT = "APOVERPAYMENTPAYMENT".freeze
+    ACCRECPAYMENT ||= "ACCRECPAYMENT".freeze
+    ACCPAYPAYMENT ||= "ACCPAYPAYMENT".freeze
+    ARCREDITPAYMENT ||= "ARCREDITPAYMENT".freeze
+    APCREDITPAYMENT ||= "APCREDITPAYMENT".freeze
+    AROVERPAYMENTPAYMENT ||= "AROVERPAYMENTPAYMENT".freeze
+    ARPREPAYMENTPAYMENT ||= "ARPREPAYMENTPAYMENT".freeze
+    APPREPAYMENTPAYMENT ||= "APPREPAYMENTPAYMENT".freeze
+    APOVERPAYMENTPAYMENT ||= "APOVERPAYMENTPAYMENT".freeze
     
     # UTC timestamp of last update to the payment
     attr_accessor :updated_date_utc
@@ -137,6 +140,7 @@ module XeroRuby::Accounting
         :'date' => :'Date',
         :'currency_rate' => :'CurrencyRate',
         :'amount' => :'Amount',
+        :'bank_amount' => :'BankAmount',
         :'reference' => :'Reference',
         :'is_reconciled' => :'IsReconciled',
         :'status' => :'Status',
@@ -168,6 +172,7 @@ module XeroRuby::Accounting
         :'date' => :'Date',
         :'currency_rate' => :'BigDecimal',
         :'amount' => :'BigDecimal',
+        :'bank_amount' => :'BigDecimal',
         :'reference' => :'String',
         :'is_reconciled' => :'Boolean',
         :'status' => :'String',
@@ -242,6 +247,10 @@ module XeroRuby::Accounting
 
       if attributes.key?(:'amount')
         self.amount = attributes[:'amount']
+      end
+
+      if attributes.key?(:'bank_amount')
+        self.bank_amount = attributes[:'bank_amount']
       end
 
       if attributes.key?(:'reference')
@@ -360,6 +369,7 @@ module XeroRuby::Accounting
           date == o.date &&
           currency_rate == o.currency_rate &&
           amount == o.amount &&
+          bank_amount == o.bank_amount &&
           reference == o.reference &&
           is_reconciled == o.is_reconciled &&
           status == o.status &&
@@ -385,7 +395,7 @@ module XeroRuby::Accounting
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [invoice, credit_note, prepayment, overpayment, invoice_number, credit_note_number, account, code, date, currency_rate, amount, reference, is_reconciled, status, payment_type, updated_date_utc, payment_id, batch_payment_id, bank_account_number, particulars, details, has_account, has_validation_errors, status_attribute_string, validation_errors].hash
+      [invoice, credit_note, prepayment, overpayment, invoice_number, credit_note_number, account, code, date, currency_rate, amount, bank_amount, reference, is_reconciled, status, payment_type, updated_date_utc, payment_id, batch_payment_id, bank_account_number, particulars, details, has_account, has_validation_errors, status_attribute_string, validation_errors].hash
     end
 
     # Builds the object from hash
@@ -514,6 +524,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

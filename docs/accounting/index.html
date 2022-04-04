@@ -1512,6 +1512,22 @@ ul.nav-tabs {
       "format" : "uuid",
       "readOnly" : true
     },
+    "FromIsReconciled" : {
+      "type" : "boolean",
+      "description" : "The Bank Transaction boolean to show if it is reconciled for the source account",
+      "example" : false,
+      "default" : false
+    },
+    "ToIsReconciled" : {
+      "type" : "boolean",
+      "description" : "The Bank Transaction boolean to show if it is reconciled for the destination account",
+      "example" : false,
+      "default" : false
+    },
+    "Reference" : {
+      "type" : "string",
+      "description" : "Reference for the transactions."
+    },
     "HasAttachments" : {
       "type" : "boolean",
       "description" : "Boolean to indicate if a Bank Transfer has an attachment",
@@ -1774,6 +1790,119 @@ ul.nav-tabs {
   "description" : "",
   "x-isObjectArray" : true
 };
+      defs["Budget"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "BudgetID" : {
+      "type" : "string",
+      "description" : "Xero identifier",
+      "format" : "uuid"
+    },
+    "Type" : {
+      "type" : "string",
+      "description" : "Type of Budget. OVERALL or TRACKING",
+      "enum" : [ "OVERALL", "TRACKING" ]
+    },
+    "Description" : {
+      "maxLength" : 255,
+      "type" : "string",
+      "description" : "The Budget description"
+    },
+    "UpdatedDateUTC" : {
+      "type" : "string",
+      "description" : "UTC timestamp of last update to budget",
+      "readOnly" : true,
+      "example" : "/Date(1573755038314)/",
+      "x-is-msdate-time" : true
+    },
+    "BudgetLines" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/BudgetLine"
+      }
+    },
+    "Tracking" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/TrackingCategory"
+      }
+    }
+  },
+  "description" : "",
+  "externalDocs" : {
+    "url" : "http://developer.xero.com/documentation/api/budgets/"
+  }
+};
+      defs["BudgetBalance"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "Period" : {
+      "type" : "string",
+      "description" : "Period the amount applies to (e.g. “2019-08”)",
+      "x-is-msdate" : true
+    },
+    "Amount" : {
+      "type" : "number",
+      "description" : "LineItem Quantity",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "UnitAmount" : {
+      "type" : "number",
+      "description" : "Budgeted amount",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "Notes" : {
+      "maxLength" : 255,
+      "type" : "string",
+      "description" : "Any footnotes associated with this balance"
+    }
+  },
+  "description" : ""
+};
+      defs["BudgetLine"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "AccountID" : {
+      "type" : "string",
+      "description" : "See Accounts",
+      "format" : "uuid"
+    },
+    "AccountCode" : {
+      "type" : "string",
+      "description" : "See Accounts",
+      "example" : "90.0"
+    },
+    "BudgetBalances" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/BudgetBalance"
+      }
+    }
+  },
+  "description" : "",
+  "externalDocs" : {
+    "url" : "http://developer.xero.com/documentation/api/budgets/"
+  }
+};
+      defs["Budgets"] = {
+  "title" : "",
+  "type" : "object",
+  "properties" : {
+    "Budgets" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/Budget"
+      }
+    }
+  },
+  "description" : "",
+  "x-isObjectArray" : true
+};
       defs["CISOrgSetting"] = {
   "title" : "",
   "properties" : {
@@ -1855,6 +1984,11 @@ ul.nav-tabs {
       "description" : "Xero identifier",
       "format" : "uuid"
     },
+    "MergedToContactID" : {
+      "type" : "string",
+      "description" : "ID for the destination of a merged contact. Only returned when using paging or when fetching a contact by ContactId or ContactNumber.",
+      "format" : "uuid"
+    },
     "ContactNumber" : {
       "maxLength" : 50,
       "type" : "string",
@@ -1884,6 +2018,11 @@ ul.nav-tabs {
       "maxLength" : 255,
       "type" : "string",
       "description" : "Last name of contact person (max length = 255)"
+    },
+    "CompanyNumber" : {
+      "maxLength" : 50,
+      "type" : "string",
+      "description" : "Company registration number (max length = 50)"
     },
     "EmailAddress" : {
       "maxLength" : 255,
@@ -1939,6 +2078,16 @@ ul.nav-tabs {
     "IsCustomer" : {
       "type" : "boolean",
       "description" : "true or false – Boolean that describes if a contact has any AR invoices entered against them. Cannot be set via PUT or POST – it is automatically set when an accounts receivable invoice is generated against this contact."
+    },
+    "SalesDefaultLineAmountType" : {
+      "type" : "string",
+      "description" : "The default sales line amount type for a contact. Only available when summaryOnly parameter or paging is used, or when fetch by ContactId or ContactNumber.",
+      "enum" : [ "INCLUSIVE", "EXCLUSIVE", "NONE" ]
+    },
+    "PurchasesDefaultLineAmountType" : {
+      "type" : "string",
+      "description" : "The default purchases line amount type for a contact Only available when summaryOnly parameter or paging is used, or when fetch by ContactId or ContactNumber.",
+      "enum" : [ "INCLUSIVE", "EXCLUSIVE", "NONE" ]
     },
     "DefaultCurrency" : {
       "$ref" : "#/components/schemas/CurrencyCode"
@@ -3370,6 +3519,12 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "See Accounts"
     },
+    "AccountID" : {
+      "type" : "string",
+      "description" : "The associated account ID related to this line item",
+      "format" : "uuid",
+      "example" : "00000000-0000-0000-0000-000000000000"
+    },
     "TaxType" : {
       "type" : "string",
       "description" : "The tax type from TaxRates"
@@ -3379,6 +3534,9 @@ ul.nav-tabs {
       "description" : "The tax amount is auto calculated as a percentage of the line amount (see below) based on the tax rate. This value can be overriden if the calculated <TaxAmount> is not correct.",
       "format" : "double",
       "x-is-money" : true
+    },
+    "Item" : {
+      "$ref" : "#/components/schemas/LineItemItem"
     },
     "LineAmount" : {
       "type" : "number",
@@ -3416,6 +3574,27 @@ ul.nav-tabs {
   "externalDocs" : {
     "url" : "https://developer.xero.com/documentation/api/invoices#post"
   }
+};
+      defs["LineItemItem"] = {
+  "title" : "",
+  "properties" : {
+    "Code" : {
+      "maxLength" : 30,
+      "type" : "string",
+      "description" : "User defined item code (max length = 30)"
+    },
+    "Name" : {
+      "maxLength" : 50,
+      "type" : "string",
+      "description" : "The name of the item (max length = 50)"
+    },
+    "ItemID" : {
+      "type" : "string",
+      "description" : "The Xero identifier for an Item",
+      "format" : "uuid"
+    }
+  },
+  "description" : ""
 };
       defs["LineItemTracking"] = {
   "title" : "",
@@ -3752,7 +3931,7 @@ ul.nav-tabs {
     "OrganisationType" : {
       "type" : "string",
       "description" : "Organisation Type",
-      "enum" : [ "ACCOUNTING_PRACTICE", "COMPANY", "CHARITY", "CLUB_OR_SOCIETY", "LOOK_THROUGH_COMPANY", "NOT_FOR_PROFIT", "PARTNERSHIP", "S_CORPORATION", "SELF_MANAGED_SUPERANNUATION_FUND", "SOLE_TRADER", "SUPERANNUATION_FUND", "TRUST" ]
+      "enum" : [ "ACCOUNTING_PRACTICE", "COMPANY", "CHARITY", "CLUB_OR_SOCIETY", "INDIVIDUAL", "LOOK_THROUGH_COMPANY", "NOT_FOR_PROFIT", "PARTNERSHIP", "S_CORPORATION", "SELF_MANAGED_SUPERANNUATION_FUND", "SOLE_TRADER", "SUPERANNUATION_FUND", "TRUST" ]
     },
     "BaseCurrency" : {
       "$ref" : "#/components/schemas/CurrencyCode"
@@ -3829,7 +4008,7 @@ ul.nav-tabs {
     "OrganisationEntityType" : {
       "type" : "string",
       "description" : "Organisation Entity Type",
-      "enum" : [ "ACCOUNTING_PRACTICE", "COMPANY", "CHARITY", "CLUB_OR_SOCIETY", "LOOK_THROUGH_COMPANY", "NOT_FOR_PROFIT", "PARTNERSHIP", "S_CORPORATION", "SELF_MANAGED_SUPERANNUATION_FUND", "SOLE_TRADER", "SUPERANNUATION_FUND", "TRUST" ]
+      "enum" : [ "ACCOUNTING_PRACTICE", "COMPANY", "CHARITY", "CLUB_OR_SOCIETY", "INDIVIDUAL", "LOOK_THROUGH_COMPANY", "NOT_FOR_PROFIT", "PARTNERSHIP", "S_CORPORATION", "SELF_MANAGED_SUPERANNUATION_FUND", "SOLE_TRADER", "SUPERANNUATION_FUND", "TRUST" ]
     },
     "ShortCode" : {
       "type" : "string",
@@ -4069,6 +4248,12 @@ ul.nav-tabs {
     "Amount" : {
       "type" : "number",
       "description" : "The amount of the payment. Must be less than or equal to the outstanding amount owing on the invoice e.g. 200.00",
+      "format" : "double",
+      "x-is-money" : true
+    },
+    "BankAmount" : {
+      "type" : "number",
+      "description" : "The amount of the payment in the currency of the bank account.",
       "format" : "double",
       "x-is-money" : true
     },
@@ -5005,10 +5190,6 @@ ul.nav-tabs {
       defs["Report"] = {
   "title" : "",
   "properties" : {
-    "ReportID" : {
-      "type" : "string",
-      "description" : "See Prepayment Types"
-    },
     "ReportName" : {
       "type" : "string",
       "description" : "See Prepayment Types"
@@ -5141,7 +5322,7 @@ ul.nav-tabs {
   "properties" : {
     "ReportID" : {
       "type" : "string",
-      "description" : "Report id"
+      "description" : "ID of the Report"
     },
     "ReportName" : {
       "type" : "string",
@@ -5571,7 +5752,7 @@ ul.nav-tabs {
   "title" : "",
   "type" : "string",
   "description" : "Timezone specifications",
-  "enum" : [ "MOROCCOSTANDARDTIME", "UTC", "GMTSTANDARDTIME", "GREENWICHSTANDARDTIME", "WEUROPESTANDARDTIME", "CENTRALEUROPESTANDARDTIME", "ROMANCESTANDARDTIME", "CENTRALEUROPEANSTANDARDTIME", "WCENTRALAFRICASTANDARDTIME", "NAMIBIASTANDARDTIME", "JORDANSTANDARDTIME", "GTBSTANDARDTIME", "MIDDLEEASTSTANDARDTIME", "EGYPTSTANDARDTIME", "SYRIASTANDARDTIME", "EEUROPESTANDARDTIME", "SOUTHAFRICASTANDARDTIME", "FLESTANDARDTIME", "TURKEYSTANDARDTIME", "ISRAELSTANDARDTIME", "KALININGRADSTANDARDTIME", "LIBYASTANDARDTIME", "ARABICSTANDARDTIME", "ARABSTANDARDTIME", "BELARUSSTANDARDTIME", "RUSSIANSTANDARDTIME", "EAFRICASTANDARDTIME", "IRANSTANDARDTIME", "ARABIANSTANDARDTIME", "AZERBAIJANSTANDARDTIME", "RUSSIATIMEZONE3", "MAURITIUSSTANDARDTIME", "GEORGIANSTANDARDTIME", "CAUCASUSSTANDARDTIME", "AFGHANISTANSTANDARDTIME", "WESTASIASTANDARDTIME", "EKATERINBURGSTANDARDTIME", "PAKISTANSTANDARDTIME", "INDIASTANDARDTIME", "SRILANKASTANDARDTIME", "NEPALSTANDARDTIME", "CENTRALASIASTANDARDTIME", "BANGLADESHSTANDARDTIME", "NCENTRALASIASTANDARDTIME", "MYANMARSTANDARDTIME", "SEASIASTANDARDTIME", "NORTHASIASTANDARDTIME", "CHINASTANDARDTIME", "NORTHASIAEASTSTANDARDTIME", "SINGAPORESTANDARDTIME", "WAUSTRALIASTANDARDTIME", "TAIPEISTANDARDTIME", "ULAANBAATARSTANDARDTIME", "TOKYOSTANDARDTIME", "KOREASTANDARDTIME", "YAKUTSKSTANDARDTIME", "CENAUSTRALIASTANDARDTIME", "AUSCENTRALSTANDARDTIME", "EAUSTRALIASTANDARDTIME", "AUSEASTERNSTANDARDTIME", "WESTPACIFICSTANDARDTIME", "TASMANIASTANDARDTIME", "MAGADANSTANDARDTIME", "VLADIVOSTOKSTANDARDTIME", "RUSSIATIMEZONE10", "CENTRALPACIFICSTANDARDTIME", "RUSSIATIMEZONE11", "NEWZEALANDSTANDARDTIME", "UTC+12", "UTC+13", "FIJISTANDARDTIME", "KAMCHATKASTANDARDTIME", "TONGASTANDARDTIME", "SAMOASTANDARDTIME", "LINEISLANDSSTANDARDTIME", "AZORESSTANDARDTIME", "CAPEVERDESTANDARDTIME", "UTC02", "MIDATLANTICSTANDARDTIME", "ESOUTHAMERICASTANDARDTIME", "ARGENTINASTANDARDTIME", "SAEASTERNSTANDARDTIME", "GREENLANDSTANDARDTIME", "MONTEVIDEOSTANDARDTIME", "BAHIASTANDARDTIME", "NEWFOUNDLANDSTANDARDTIME", "PARAGUAYSTANDARDTIME", "ATLANTICSTANDARDTIME", "CENTRALBRAZILIANSTANDARDTIME", "SAWESTERNSTANDARDTIME", "PACIFICSASTANDARDTIME", "VENEZUELASTANDARDTIME", "SAPACIFICSTANDARDTIME", "EASTERNSTANDARDTIME", "USEASTERNSTANDARDTIME", "CENTRALAMERICASTANDARDTIME", "CENTRALSTANDARDTIME", "CENTRALSTANDARDTIME(MEXICO)", "CANADACENTRALSTANDARDTIME", "USMOUNTAINSTANDARDTIME", "MOUNTAINSTANDARDTIME(MEXICO)", "MOUNTAINSTANDARDTIME", "PACIFICSTANDARDTIME(MEXICO)", "PACIFICSTANDARDTIME", "ALASKANSTANDARDTIME", "HAWAIIANSTANDARDTIME", "UTC11", "DATELINESTANDARDTIME" ]
+  "enum" : [ "MOROCCOSTANDARDTIME", "UTC", "GMTSTANDARDTIME", "GREENWICHSTANDARDTIME", "WEUROPESTANDARDTIME", "CENTRALEUROPESTANDARDTIME", "ROMANCESTANDARDTIME", "CENTRALEUROPEANSTANDARDTIME", "WCENTRALAFRICASTANDARDTIME", "NAMIBIASTANDARDTIME", "JORDANSTANDARDTIME", "GTBSTANDARDTIME", "MIDDLEEASTSTANDARDTIME", "EGYPTSTANDARDTIME", "SYRIASTANDARDTIME", "EEUROPESTANDARDTIME", "SOUTHAFRICASTANDARDTIME", "FLESTANDARDTIME", "TURKEYSTANDARDTIME", "ISRAELSTANDARDTIME", "KALININGRADSTANDARDTIME", "LIBYASTANDARDTIME", "ARABICSTANDARDTIME", "ARABSTANDARDTIME", "BELARUSSTANDARDTIME", "RUSSIANSTANDARDTIME", "EAFRICASTANDARDTIME", "IRANSTANDARDTIME", "ARABIANSTANDARDTIME", "AZERBAIJANSTANDARDTIME", "RUSSIATIMEZONE3", "MAURITIUSSTANDARDTIME", "GEORGIANSTANDARDTIME", "CAUCASUSSTANDARDTIME", "AFGHANISTANSTANDARDTIME", "WESTASIASTANDARDTIME", "EKATERINBURGSTANDARDTIME", "PAKISTANSTANDARDTIME", "INDIASTANDARDTIME", "SRILANKASTANDARDTIME", "NEPALSTANDARDTIME", "CENTRALASIASTANDARDTIME", "BANGLADESHSTANDARDTIME", "NCENTRALASIASTANDARDTIME", "MYANMARSTANDARDTIME", "SEASIASTANDARDTIME", "NORTHASIASTANDARDTIME", "CHINASTANDARDTIME", "NORTHASIAEASTSTANDARDTIME", "SINGAPORESTANDARDTIME", "WAUSTRALIASTANDARDTIME", "TAIPEISTANDARDTIME", "ULAANBAATARSTANDARDTIME", "TOKYOSTANDARDTIME", "KOREASTANDARDTIME", "YAKUTSKSTANDARDTIME", "CENAUSTRALIASTANDARDTIME", "AUSCENTRALSTANDARDTIME", "EAUSTRALIASTANDARDTIME", "AUSEASTERNSTANDARDTIME", "WESTPACIFICSTANDARDTIME", "TASMANIASTANDARDTIME", "MAGADANSTANDARDTIME", "VLADIVOSTOKSTANDARDTIME", "RUSSIATIMEZONE10", "CENTRALPACIFICSTANDARDTIME", "RUSSIATIMEZONE11", "NEWZEALANDSTANDARDTIME", "UTC+12", "UTC+13", "FIJISTANDARDTIME", "KAMCHATKASTANDARDTIME", "TONGASTANDARDTIME", "SAMOASTANDARDTIME", "LINEISLANDSSTANDARDTIME", "AZORESSTANDARDTIME", "CAPEVERDESTANDARDTIME", "UTC02", "MIDATLANTICSTANDARDTIME", "ESOUTHAMERICASTANDARDTIME", "ARGENTINASTANDARDTIME", "SAEASTERNSTANDARDTIME", "GREENLANDSTANDARDTIME", "MONTEVIDEOSTANDARDTIME", "BAHIASTANDARDTIME", "NEWFOUNDLANDSTANDARDTIME", "PARAGUAYSTANDARDTIME", "ATLANTICSTANDARDTIME", "CENTRALBRAZILIANSTANDARDTIME", "SAWESTERNSTANDARDTIME", "PACIFICSASTANDARDTIME", "VENEZUELASTANDARDTIME", "SAPACIFICSTANDARDTIME", "EASTERNSTANDARDTIME", "USEASTERNSTANDARDTIME", "CENTRALAMERICASTANDARDTIME", "CENTRALSTANDARDTIME", "CENTRALSTANDARDTIME(MEXICO)", "CANADACENTRALSTANDARDTIME", "USMOUNTAINSTANDARDTIME", "MOUNTAINSTANDARDTIME(MEXICO)", "MOUNTAINSTANDARDTIME", "PACIFICSTANDARDTIME(MEXICO)", "PACIFICSTANDARDTIME", "ALASKANSTANDARDTIME", "HAWAIIANSTANDARDTIME", "UTC11", "DATELINESTANDARDTIME", "EASTERISLANDSTANDARDTIME" ]
 };
       defs["TrackingCategories"] = {
   "title" : "",
@@ -5755,7 +5936,7 @@ ul.nav-tabs {
     <div class='docs-header'>
       <div class='xero-logo'>
         <a target="_blank"  href="https://developer.xero.com/documentation/">
-        <img alt="" width="115" height="30" class="xrh-app-image" src="https://developer.xero.com/static/images/developer-logo.svg">
+        <img alt="" width="115" height="30" class="xrh-app-image" src="https://i.imgur.com/kzfh8mf.png">
         </a>
       </div>
       <fieldset class='api-set'>
@@ -5784,6 +5965,8 @@ ul.nav-tabs {
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_au/index.html" value="PayrollAu">Payroll (AU)</option>
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_uk/index.html" value="PayrollUk">Payroll (UK)</option>
           <option data-url="https://xeroapi.github.io/xero-ruby/payroll_nz/index.html" value="PayrollNz">Payroll (NZ)</option>
+          <option data-url="https://xeroapi.github.io/xero-ruby/app_store/index.html" value="AppStore">App Store</option>
+          <option data-url="https://xeroapi.github.io/xero-ruby/finance/index.html" value="Finance">Finance</option>
         </select>
       </fieldset>
       <div class='api-set-wrapper'>
@@ -5825,7 +6008,7 @@ ul.nav-tabs {
           <nav id="scrollingNav">
             <ul class="sidenav nav nav-list">
               <li class="nav-header" data-group="Accounting"><strong>SDK: </strong><span id='sdk-name'></span></li>
-              <li class="nav-header" data-group="Accounting"><strong>VSN: </strong>3.0.0</li>
+              <li class="nav-header" data-group="Accounting"><strong>VSN: </strong>3.7.1</li>
               <li class="nav-header" data-group="Accounting"><a href="#api-Accounting">Methods</a></li>
               <li data-group="Accounting" data-name="createAccount" class="">
                 <a href="#api-Accounting-createAccount">createAccount</a>
@@ -6084,6 +6267,12 @@ ul.nav-tabs {
               </li>
               <li data-group="Accounting" data-name="getBrandingThemes" class="">
                 <a href="#api-Accounting-getBrandingThemes">getBrandingThemes</a>
+              </li>
+              <li data-group="Accounting" data-name="getBudget" class="">
+                <a href="#api-Accounting-getBudget">getBudget</a>
+              </li>
+              <li data-group="Accounting" data-name="getBudgets" class="">
+                <a href="#api-Accounting-getBudgets">getBudgets</a>
               </li>
               <li data-group="Accounting" data-name="getContact" class="">
                 <a href="#api-Accounting-getContact">getContact</a>
@@ -6346,12 +6535,6 @@ ul.nav-tabs {
               <li data-group="Accounting" data-name="getReportAgedReceivablesByContact" class="">
                 <a href="#api-Accounting-getReportAgedReceivablesByContact">getReportAgedReceivablesByContact</a>
               </li>
-              <li data-group="Accounting" data-name="getReportBASorGST" class="">
-                <a href="#api-Accounting-getReportBASorGST">getReportBASorGST</a>
-              </li>
-              <li data-group="Accounting" data-name="getReportBASorGSTList" class="">
-                <a href="#api-Accounting-getReportBASorGSTList">getReportBASorGSTList</a>
-              </li>
               <li data-group="Accounting" data-name="getReportBalanceSheet" class="">
                 <a href="#api-Accounting-getReportBalanceSheet">getReportBalanceSheet</a>
               </li>
@@ -6364,6 +6547,9 @@ ul.nav-tabs {
               <li data-group="Accounting" data-name="getReportExecutiveSummary" class="">
                 <a href="#api-Accounting-getReportExecutiveSummary">getReportExecutiveSummary</a>
               </li>
+              <li data-group="Accounting" data-name="getReportFromId" class="">
+                <a href="#api-Accounting-getReportFromId">getReportFromId</a>
+              </li>
               <li data-group="Accounting" data-name="getReportProfitAndLoss" class="">
                 <a href="#api-Accounting-getReportProfitAndLoss">getReportProfitAndLoss</a>
               </li>
@@ -6372,6 +6558,9 @@ ul.nav-tabs {
               </li>
               <li data-group="Accounting" data-name="getReportTrialBalance" class="">
                 <a href="#api-Accounting-getReportTrialBalance">getReportTrialBalance</a>
+              </li>
+              <li data-group="Accounting" data-name="getReportsList" class="">
+                <a href="#api-Accounting-getReportsList">getReportsList</a>
               </li>
               <li data-group="Accounting" data-name="getTaxRates" class="">
                 <a href="#api-Accounting-getTaxRates">getTaxRates</a>
@@ -7463,7 +7652,7 @@ Xero identifier for Tenant
       "schema" : {
         "$ref" : "#/components/schemas/BankTransfers"
       },
-      "example" : "{ \"BankTransfers\": [ { \"FromBankAccount\": { \"Code\": \"090\", \"Name\": \"My Savings\", \"AccountID\": \"00000000-0000-0000-0000-000000000000\", \"Type\": \"BANK\", \"BankAccountNumber\": \"123455\", \"Status\": \"ACTIVE\", \"BankAccountType\": \"BANK\", \"CurrencyCode\": \"USD\", \"TaxType\": \"NONE\", \"EnablePaymentsToAccount\": false, \"ShowInExpenseClaims\": false, \"Class\": \"ASSET\", \"ReportingCode\": \"ASS\", \"ReportingCodeName\": \"Assets\", \"HasAttachments\": false, \"UpdatedDateUTC\": \"2016-10-17T13:45:33.993-07:00\" }, \"ToBankAccount\": { \"Code\": \"088\", \"Name\": \"Business Wells Fargo\", \"AccountID\": \"00000000-0000-0000-0000-000000000000\", \"Type\": \"BANK\", \"BankAccountNumber\": \"123455\", \"Status\": \"ACTIVE\", \"BankAccountType\": \"BANK\", \"CurrencyCode\": \"USD\", \"TaxType\": \"NONE\", \"EnablePaymentsToAccount\": false, \"ShowInExpenseClaims\": false, \"Class\": \"ASSET\", \"ReportingCode\": \"ASS\", \"ReportingCodeName\": \"Assets\", \"HasAttachments\": false, \"UpdatedDateUTC\": \"2016-06-03T08:31:14.517-07:00\" }, \"Amount\": \"50.00\" } ] }"
+      "example" : "{ \"BankTransfers\": [ { \"FromBankAccount\": { \"Code\": \"090\", \"Name\": \"My Savings\", \"AccountID\": \"00000000-0000-0000-0000-000000000000\", \"Type\": \"BANK\", \"BankAccountNumber\": \"123455\", \"Status\": \"ACTIVE\", \"BankAccountType\": \"BANK\", \"CurrencyCode\": \"USD\", \"TaxType\": \"NONE\", \"EnablePaymentsToAccount\": false, \"ShowInExpenseClaims\": false, \"Class\": \"ASSET\", \"ReportingCode\": \"ASS\", \"ReportingCodeName\": \"Assets\", \"HasAttachments\": false, \"UpdatedDateUTC\": \"2016-10-17T13:45:33.993-07:00\" }, \"ToBankAccount\": { \"Code\": \"088\", \"Name\": \"Business Wells Fargo\", \"AccountID\": \"00000000-0000-0000-0000-000000000000\", \"Type\": \"BANK\", \"BankAccountNumber\": \"123455\", \"Status\": \"ACTIVE\", \"BankAccountType\": \"BANK\", \"CurrencyCode\": \"USD\", \"TaxType\": \"NONE\", \"EnablePaymentsToAccount\": false, \"ShowInExpenseClaims\": false, \"Class\": \"ASSET\", \"ReportingCode\": \"ASS\", \"ReportingCodeName\": \"Assets\", \"HasAttachments\": false, \"UpdatedDateUTC\": \"2016-06-03T08:31:14.517-07:00\" }, \"Amount\": \"50.00\", \"FromIsReconciled\": true, \"ToIsReconciled\": true, \"Reference\": \"Sub 098801\" } ] }"
     }
   },
   "required" : true
@@ -8287,7 +8476,7 @@ Xero identifier for Tenant
       "schema" : {
         "$ref" : "#/components/schemas/PaymentService"
       },
-      "example" : "{ \"PaymentServiceID\": \"00000000-0000-0000-0000-000000000000\", \"PaymentServiceName\": \"ACME Payments\", \"PaymentServiceUrl\": \"https://www.payupnow.com/\", \"PayNowText\": \"Pay Now\" }"
+      "example" : "{ \"PaymentServiceID\": \"00000000-0000-0000-0000-000000000000\", \"PaymentServiceName\": \"Payments Service\", \"PaymentServiceUrl\": \"https://www.paymentservice.com/\", \"PayNowText\": \"Pay Now\" }"
     }
   },
   "required" : true
@@ -16631,6 +16820,11 @@ end
                       <td>Grant read-write access to organisation and account settings</td>
                     </tr>
                     
+                    <tr>
+                      <td>accounting.settings.read</td>
+                      <td>Grant read-only access to organisation and account settings</td>
+                    </tr>
+                    
                   </table>
                   <h2>Parameters</h2>
                   <div class="methodsubtabletitle">Path parameters</div>
@@ -16740,6 +16934,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -16901,6 +17100,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -17065,6 +17269,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -17182,6 +17391,11 @@ end
                     <tr>
                       <td>accounting.settings</td>
                       <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>accounting.settings.read</td>
+                      <td>Grant read-only access to organisation and account settings</td>
                     </tr>
                     
                   </table>
@@ -17331,6 +17545,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -17471,6 +17690,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -17632,6 +17856,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -17796,6 +18025,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -17911,6 +18145,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -18103,6 +18342,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -18214,6 +18458,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -18329,6 +18578,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -18490,6 +18744,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -18654,6 +18913,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -18765,6 +19029,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -18880,6 +19149,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -19032,6 +19306,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -19145,6 +19424,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -19295,6 +19579,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -19522,6 +19811,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -19552,6 +19846,332 @@ Xero identifier for Tenant
                 <div class="inner required">
                     Required
                 </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-Accounting-getBudget">
+                <article id="api-Accounting-getBudget-0" data-group="User" data-name="getBudget" data-version="0">
+                  <div class="pull-left">
+                    <h1>getBudget</h1>
+                    <p>Retrieves a specific budget, which includes budget lines</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Budgets/{BudgetID}</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-Accounting-getBudget-0-ruby">Ruby</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-Accounting-getBudget-0-ruby">
+                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
+
+xero_tenant_id = 'YOUR_XERO_TENANT_ID'
+budget_id = '00000000-0000-0000-0000-000000000000'
+date_to = "2019-10-31"
+date_from = "2019-10-31"
+
+begin
+  response = xero_client.accounting_api.get_budget(xero_tenant_id, budget_id, date_to, date_from)
+  return response
+rescue XeroRuby::ApiError => e
+  puts "Exception when calling get_budget: #{e}"
+end
+</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>accounting.budgets.read</td>
+                      <td></td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">BudgetID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getBudget_budgetID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    UUID
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Unique identifier for Budgets
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getBudget_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Query parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">DateTo</td>
+<td>
+
+
+    <div id="d2e199_getBudget_dateTo">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    date
+                </span>
+                    <span class="format">
+                        (date)
+                    </span>
+
+                    <div class="inner description marked">
+Filter by start date
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">DateFrom</td>
+<td>
+
+
+    <div id="d2e199_getBudget_dateFrom">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    date
+                </span>
+                    <span class="format">
+                        (date)
+                    </span>
+
+                    <div class="inner description marked">
+Filter by end date
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
+              <div id="api-Accounting-getBudgets">
+                <article id="api-Accounting-getBudgets-0" data-group="User" data-name="getBudgets" data-version="0">
+                  <div class="pull-left">
+                    <h1>getBudgets</h1>
+                    <p>Retrieve a list of budgets</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Budgets</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-Accounting-getBudgets-0-ruby">Ruby</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-Accounting-getBudgets-0-ruby">
+                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
+
+xero_tenant_id = 'YOUR_XERO_TENANT_ID'
+ids = [&quot;00000000-0000-0000-0000-000000000000&quot;]
+date_to = "2019-10-31"
+date_from = "2019-10-31"
+
+begin
+  response = xero_client.accounting_api.get_budgets(xero_tenant_id, ids, date_to, date_from)
+  return response
+rescue XeroRuby::ApiError => e
+  puts "Exception when calling get_budgets: #{e}"
+end
+</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>accounting.budgets.read</td>
+                      <td></td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getBudgets_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Query parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">IDs</td>
+<td>
+
+
+    <div id="d2e199_getBudgets_iDs">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    array[UUID]
+                </span>
+                    <span class="format">
+                        (uuid)
+                    </span>
+
+                    <div class="inner description marked">
+Filter by BudgetID. Allows you to retrieve a specific individual budget.
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">DateTo</td>
+<td>
+
+
+    <div id="d2e199_getBudgets_dateTo">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    date
+                </span>
+                    <span class="format">
+                        (date)
+                    </span>
+
+                    <div class="inner description marked">
+Filter by start date
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">DateFrom</td>
+<td>
+
+
+    <div id="d2e199_getBudgets_dateFrom">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    date
+                </span>
+                    <span class="format">
+                        (date)
+                    </span>
+
+                    <div class="inner description marked">
+Filter by end date
+                    </div>
+            </div>
         </div>
     </div>
 </td>
@@ -19600,6 +20220,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.contacts.read</td>
@@ -19715,6 +20340,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -19876,6 +20506,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -20040,6 +20675,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -20153,6 +20793,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.contacts.read</td>
                       <td>Grant read-only access to contacts and contact groups</td>
                     </tr>
@@ -20263,8 +20908,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>accounting.contacts.read</td>
-                      <td>Grant read-only access to contacts and contact groups</td>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>accounting.settings.read</td>
+                      <td>Grant read-only access to organisation and account settings</td>
                     </tr>
                     
                   </table>
@@ -20374,6 +21024,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.contacts.read</td>
@@ -20488,6 +21143,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.contacts.read</td>
@@ -20617,6 +21277,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.contacts.read</td>
                       <td>Grant read-only access to contacts and contact groups</td>
                     </tr>
@@ -20722,9 +21387,10 @@ ids = [&quot;00000000-0000-0000-0000-000000000000&quot;]
 page = 1
 include_archived = true
 summary_only = true
+search_term = 'searchTerm=Joe Bloggs'
 
 begin
-  response = xero_client.accounting_api.get_contacts(xero_tenant_id, if_modified_since, where, order, ids, page, include_archived, summary_only)
+  response = xero_client.accounting_api.get_contacts(xero_tenant_id, if_modified_since, where, order, ids, page, include_archived, summary_only, search_term)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_contacts: #{e}"
@@ -20734,6 +21400,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.contacts</td>
+                      <td>Grant read-write access to contacts and contact groups</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.contacts.read</td>
@@ -20924,6 +21595,26 @@ Use summaryOnly=true in GET Contacts and Invoices endpoint to retrieve a smaller
 </td>
 </tr>
 
+                    <tr><td style="width:150px;">searchTerm</td>
+<td>
+
+
+    <div id="d2e199_getContacts_searchTerm">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Search parameter that performs a case-insensitive text search across the Name, FirstName, LastName, ContactNumber and EmailAddress fields.
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                   </table>
                 </article>
               </div>
@@ -20968,6 +21659,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -21114,6 +21810,11 @@ end
                       <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
                     </tr>
                     
+                    <tr>
+                      <td>accounting.transactions.read</td>
+                      <td>Grant read-only access to invoices</td>
+                    </tr>
+                    
                   </table>
                   <h2>Parameters</h2>
                   <div class="methodsubtabletitle">Path parameters</div>
@@ -21223,6 +21924,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -21384,6 +22090,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -21548,6 +22259,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -21659,6 +22375,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -21776,6 +22497,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -21969,6 +22695,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -22096,6 +22827,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -22209,6 +22945,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -22361,6 +23102,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -22472,6 +23218,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -22587,6 +23338,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -22740,6 +23496,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -22880,6 +23641,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -22993,6 +23759,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -23154,6 +23925,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -23318,6 +24094,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -23429,6 +24210,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -23543,8 +24329,13 @@ end
                   <table>
                     
                     <tr>
-                      <td>accounting.transactions.read</td>
-                      <td>Grant read-only access to invoices</td>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>accounting.settings.read</td>
+                      <td>Grant read-only access to organisation and account settings</td>
                     </tr>
                     
                   </table>
@@ -23618,11 +24409,11 @@ statuses = [&quot;DRAFT&quot;, &quot;SUBMITTED&quot;]
 page = 1
 include_archived = true
 created_by_my_app = false
-summary_only = true
 unitdp = 4
+summary_only = true
 
 begin
-  response = xero_client.accounting_api.get_invoices(xero_tenant_id, if_modified_since, where, order, ids, invoice_numbers, contact_ids, statuses, page, include_archived, created_by_my_app, summary_only, unitdp)
+  response = xero_client.accounting_api.get_invoices(xero_tenant_id, if_modified_since, where, order, ids, invoice_numbers, contact_ids, statuses, page, include_archived, created_by_my_app, unitdp, summary_only)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_invoices: #{e}"
@@ -23632,6 +24423,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -23885,26 +24681,6 @@ When set to true you'll only retrieve Invoices created by your app
 </td>
 </tr>
 
-                    <tr><td style="width:150px;">summaryOnly</td>
-<td>
-
-
-    <div id="d2e199_getInvoices_summaryOnly">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    Boolean
-                </span>
-
-                    <div class="inner description marked">
-Use summaryOnly=true in GET Contacts and Invoices endpoint to retrieve a smaller version of the response object. This returns only lightweight fields, excluding computation-heavy fields from the response, making the API calls quick and efficient.
-                    </div>
-            </div>
-        </div>
-    </div>
-</td>
-</tr>
-
                     <tr><td style="width:150px;">unitdp</td>
 <td>
 
@@ -23918,6 +24694,26 @@ Use summaryOnly=true in GET Contacts and Invoices endpoint to retrieve a smaller
 
                     <div class="inner description marked">
 e.g. unitdp=4 – (Unit Decimal Places) You can opt in to use four decimal places for unit amounts
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                    <tr><td style="width:150px;">summaryOnly</td>
+<td>
+
+
+    <div id="d2e199_getInvoices_summaryOnly">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    Boolean
+                </span>
+
+                    <div class="inner description marked">
+Use summaryOnly=true in GET Contacts and Invoices endpoint to retrieve a smaller version of the response object. This returns only lightweight fields, excluding computation-heavy fields from the response, making the API calls quick and efficient.
                     </div>
             </div>
         </div>
@@ -23969,6 +24765,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -24111,6 +24912,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -24225,6 +25031,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -24497,10 +25308,10 @@ Xero identifier for Tenant
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 if_modified_since = "2020-02-06T12:17:43.202-08:00"
 offset = 10
-paymentsOnly = true
+payments_only = true
 
 begin
-  response = xero_client.accounting_api.get_journals(xero_tenant_id, if_modified_since, offset, paymentsOnly)
+  response = xero_client.accounting_api.get_journals(xero_tenant_id, if_modified_since, offset, payments_only)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_journals: #{e}"
@@ -24662,6 +25473,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -24778,6 +25594,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -24999,6 +25820,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -25112,6 +25938,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -25273,6 +26104,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -25437,6 +26273,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -25551,6 +26392,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -25723,6 +26569,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -25834,6 +26685,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -25948,6 +26804,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -26026,6 +26887,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -26140,6 +27006,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -26218,6 +27089,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -26331,6 +27207,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -26448,6 +27329,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -26640,6 +27526,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -26751,6 +27642,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -26948,6 +27844,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -27118,6 +28019,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -27229,6 +28135,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -27346,6 +28257,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -27538,6 +28454,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -27649,6 +28570,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -27764,6 +28690,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -27928,6 +28859,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -28041,6 +28977,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -28151,6 +29092,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -28251,13 +29197,13 @@ Xero identifier for Tenant
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 if_modified_since = "2020-02-06T12:17:43.202-08:00"
 status = 'SUBMITTED'
-dateFrom = '2019-12-01'
-dateTo = '2019-12-31'
+date_from = '2019-12-01'
+date_to = '2019-12-31'
 order = 'PurchaseOrderNumber ASC'
 page = 1
 
 begin
-  response = xero_client.accounting_api.get_purchase_orders(xero_tenant_id, if_modified_since, status, dateFrom, dateTo, order, page)
+  response = xero_client.accounting_api.get_purchase_orders(xero_tenant_id, if_modified_since, status, date_from, date_to, order, page)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_purchase_orders: #{e}"
@@ -28267,6 +29213,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -28481,6 +29432,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -28640,6 +29596,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -28751,6 +29712,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -28866,6 +29832,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -29027,6 +29998,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -29191,6 +30167,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -29304,6 +30285,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -29403,10 +30389,10 @@ Xero identifier for Tenant
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 if_modified_since = "2020-02-06T12:17:43.202-08:00"
-date_from = "2013-10-20"
-date_to = "2013-10-20"
-expiry_date_from = "2013-10-20"
-expiry_date_to = "2013-10-20"
+date_from = "2019-10-31"
+date_to = "2019-10-31"
+expiry_date_from = "2019-10-31"
+expiry_date_to = "2019-10-31"
 contact_id = '00000000-0000-0000-0000-000000000000'
 status = 'DRAFT'
 page = 1
@@ -29424,6 +30410,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -29732,6 +30723,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -29872,6 +30868,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -30033,6 +31034,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -30197,6 +31203,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -30308,6 +31319,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -30424,6 +31440,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -30596,6 +31617,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -30709,6 +31735,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -30870,6 +31901,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.attachments.read</td>
@@ -31034,6 +32070,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.attachments</td>
+                      <td>Grant read-write access to attachments</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.attachments.read</td>
                       <td>Grant read-only access to attachments</td>
                     </tr>
@@ -31145,6 +32186,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.transactions.read</td>
@@ -31261,6 +32307,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.transactions</td>
+                      <td>Grant read-write access to bank transactions, credit notes, invoices, repeating invoices</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.transactions.read</td>
                       <td>Grant read-only access to invoices</td>
                     </tr>
@@ -31374,9 +32425,9 @@ Order by an any element
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 contact_id = '00000000-0000-0000-0000-000000000000'
-date = "2013-10-20"
-from_date = "2013-10-20"
-to_date = "2013-10-20"
+date = "2019-10-31"
+from_date = "2019-10-31"
+to_date = "2019-10-31"
 
 begin
   response = xero_client.accounting_api.get_report_aged_payables_by_contact(xero_tenant_id, contact_id, date, from_date, to_date)
@@ -31559,9 +32610,9 @@ filter by the to date of the report e.g. 2021-02-28
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 contact_id = '00000000-0000-0000-0000-000000000000'
-date = "2013-10-20"
-from_date = "2013-10-20"
-to_date = "2013-10-20"
+date = "2019-10-31"
+from_date = "2019-10-31"
+to_date = "2019-10-31"
 
 begin
   response = xero_client.accounting_api.get_report_aged_receivables_by_contact(xero_tenant_id, contact_id, date, from_date, to_date)
@@ -31717,195 +32768,6 @@ filter by the to date of the report e.g. 2021-02-28
                 </article>
               </div>
               <hr>
-              <div id="api-Accounting-getReportBASorGST">
-                <article id="api-Accounting-getReportBASorGST-0" data-group="User" data-name="getReportBASorGST" data-version="0">
-                  <div class="pull-left">
-                    <h1>getReportBASorGST</h1>
-                    <p>Retrieves a specific report for BAS using a unique report Id (only valid for AU orgs)</p>
-                  </div>
-                  <div class="pull-right"></div>
-                  <div class="clearfix"></div>
-                  <p></p>
-                  <p class="marked"></p>
-                  <p></p>
-                  <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Reports/{ReportID}</span></code></pre>
-                  <p>
-                  <h3>Usage and SDK Samples</h3>
-                  </p>
-                  <ul class="nav nav-tabs nav-tabs-examples">
-                    <!-- *****REPLACE***** comment out the other languages <li> -->
-                    <li class=""><a href="#examples-Accounting-getReportBASorGST-0-ruby">Ruby</a></li>
-                  </ul>
-                  <div class="tab-content">
-                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
-                    <div class="tab-pane" id="examples-Accounting-getReportBASorGST-0-ruby">
-                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
-
-xero_tenant_id = 'YOUR_XERO_TENANT_ID'
-report_id = '00000000-0000-0000-0000-000000000000'
-
-begin
-  response = xero_client.accounting_api.get_report_ba_sor_gst(xero_tenant_id, report_id)
-  return response
-rescue XeroRuby::ApiError => e
-  puts "Exception when calling get_report_ba_sor_gst: #{e}"
-end
-</code></pre>
-                    </div>
-                  </div>
-                  <h2>Scopes</h2>
-                  <table>
-                    
-                    <tr>
-                      <td>accounting.reports.read</td>
-                      <td>Grant read-only access to accounting reports</td>
-                    </tr>
-                    
-                  </table>
-                  <h2>Parameters</h2>
-                  <div class="methodsubtabletitle">Path parameters</div>
-                  <table id="methodsubtable">
-                    <tr>
-                      <th width="150px">Name</th>
-                      <th>Description</th>
-                    </tr>
-                    <tr><td style="width:150px;">ReportID<span style="color:red;">*</span></td>
-<td>
-
-
-    <div id="d2e199_getReportBASorGST_reportID">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Unique identifier for a Report
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                  </table>
-                  <div class="methodsubtabletitle">Header parameters</div>
-                  <table id="methodsubtable">
-                    <tr>
-                      <th width="150px">Name</th>
-                      <th>Description</th>
-                    </tr>
-                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
-<td>
-
-
-    <div id="d2e199_getReportBASorGST_xeroTenantId">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Xero identifier for Tenant
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                  </table>
-                </article>
-              </div>
-              <hr>
-              <div id="api-Accounting-getReportBASorGSTList">
-                <article id="api-Accounting-getReportBASorGSTList-0" data-group="User" data-name="getReportBASorGSTList" data-version="0">
-                  <div class="pull-left">
-                    <h1>getReportBASorGSTList</h1>
-                    <p>Retrieves report for BAS (only valid for AU orgs)</p>
-                  </div>
-                  <div class="pull-right"></div>
-                  <div class="clearfix"></div>
-                  <p></p>
-                  <p class="marked"></p>
-                  <p></p>
-                  <br />
-                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Reports</span></code></pre>
-                  <p>
-                  <h3>Usage and SDK Samples</h3>
-                  </p>
-                  <ul class="nav nav-tabs nav-tabs-examples">
-                    <!-- *****REPLACE***** comment out the other languages <li> -->
-                    <li class=""><a href="#examples-Accounting-getReportBASorGSTList-0-ruby">Ruby</a></li>
-                  </ul>
-                  <div class="tab-content">
-                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
-                    <div class="tab-pane" id="examples-Accounting-getReportBASorGSTList-0-ruby">
-                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
-
-xero_tenant_id = 'YOUR_XERO_TENANT_ID'
-
-begin
-  response = xero_client.accounting_api.get_report_ba_sor_gst_list(xero_tenant_id)
-  return response
-rescue XeroRuby::ApiError => e
-  puts "Exception when calling get_report_ba_sor_gst_list: #{e}"
-end
-</code></pre>
-                    </div>
-                  </div>
-                  <h2>Scopes</h2>
-                  <table>
-                    
-                    <tr>
-                      <td>accounting.reports.read</td>
-                      <td>Grant read-only access to accounting reports</td>
-                    </tr>
-                    
-                  </table>
-                  <h2>Parameters</h2>
-                  <div class="methodsubtabletitle">Header parameters</div>
-                  <table id="methodsubtable">
-                    <tr>
-                      <th width="150px">Name</th>
-                      <th>Description</th>
-                    </tr>
-                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
-<td>
-
-
-    <div id="d2e199_getReportBASorGSTList_xeroTenantId">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Xero identifier for Tenant
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                  </table>
-                </article>
-              </div>
-              <hr>
               <div id="api-Accounting-getReportBalanceSheet">
                 <article id="api-Accounting-getReportBalanceSheet-0" data-group="User" data-name="getReportBalanceSheet" data-version="0">
                   <div class="pull-left">
@@ -31934,14 +32796,14 @@ Xero identifier for Tenant
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 date = "2019-11-01"
 periods = 3
-time_frame = 'MONTH'
+timeframe = 'MONTH'
 tracking_option_id_1 = '00000000-0000-0000-0000-000000000000'
 tracking_option_id_2 = '00000000-0000-0000-0000-000000000000'
 standard_layout = true
 payments_only = false
 
 begin
-  response = xero_client.accounting_api.get_report_balance_sheet(xero_tenant_id, date, periods, time_frame, tracking_option_id_1, tracking_option_id_2, standard_layout, payments_only)
+  response = xero_client.accounting_api.get_report_balance_sheet(xero_tenant_id, date, periods, timeframe, tracking_option_id_1, tracking_option_id_2, standard_layout, payments_only)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_report_balance_sheet: #{e}"
@@ -32168,8 +33030,8 @@ return a cash basis for the Balance Sheet report
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
-from_date = "2013-10-20"
-to_date = "2013-10-20"
+from_date = "2019-10-31"
+to_date = "2019-10-31"
 
 begin
   response = xero_client.accounting_api.get_report_bank_summary(xero_tenant_id, from_date, to_date)
@@ -32303,11 +33165,11 @@ filter by the to date of the report e.g. 2021-02-28
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
 date = "2019-03-31"
-period = 2
-time_frame = 3
+periods = 2
+timeframe = 3
 
 begin
-  response = xero_client.accounting_api.get_report_budget_summary(xero_tenant_id, date, period, time_frame)
+  response = xero_client.accounting_api.get_report_budget_summary(xero_tenant_id, date, periods, timeframe)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_report_budget_summary: #{e}"
@@ -32384,11 +33246,11 @@ The date for the Bank Summary report e.g. 2018-03-31
 </td>
 </tr>
 
-                    <tr><td style="width:150px;">period</td>
+                    <tr><td style="width:150px;">periods</td>
 <td>
 
 
-    <div id="d2e199_getReportBudgetSummary_period">
+    <div id="d2e199_getReportBudgetSummary_periods">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -32538,6 +33400,116 @@ The date for the Bank Summary report e.g. 2018-03-31
                 </article>
               </div>
               <hr>
+              <div id="api-Accounting-getReportFromId">
+                <article id="api-Accounting-getReportFromId-0" data-group="User" data-name="getReportFromId" data-version="0">
+                  <div class="pull-left">
+                    <h1>getReportFromId</h1>
+                    <p>Retrieves a specific report using a unique ReportID</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Reports/{ReportID}</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-Accounting-getReportFromId-0-ruby">Ruby</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-Accounting-getReportFromId-0-ruby">
+                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
+
+xero_tenant_id = 'YOUR_XERO_TENANT_ID'
+report_id = '00000000-0000-0000-0000-000000000000'
+
+begin
+  response = xero_client.accounting_api.get_report_from_id(xero_tenant_id, report_id)
+  return response
+rescue XeroRuby::ApiError => e
+  puts "Exception when calling get_report_from_id: #{e}"
+end
+</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>accounting.reports.read</td>
+                      <td>Grant read-only access to accounting reports</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Path parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">ReportID<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getReportFromId_reportID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Unique identifier for a Report
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getReportFromId_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
               <div id="api-Accounting-getReportProfitAndLoss">
                 <article id="api-Accounting-getReportProfitAndLoss-0" data-group="User" data-name="getReportProfitAndLoss" data-version="0">
                   <div class="pull-left">
@@ -32564,10 +33536,10 @@ The date for the Bank Summary report e.g. 2018-03-31
                       <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
 
 xero_tenant_id = 'YOUR_XERO_TENANT_ID'
-from_date = "2013-10-20"
-to_date = "2013-10-20"
+from_date = "2019-10-31"
+to_date = "2019-10-31"
 periods = 3
-time_frame = 'MONTH'
+timeframe = 'MONTH'
 tracking_category_id = '00000000-0000-0000-0000-000000000000'
 tracking_category_id_2 = '00000000-0000-0000-0000-000000000000'
 tracking_option_id = '00000000-0000-0000-0000-000000000000'
@@ -32576,7 +33548,7 @@ standard_layout = true
 payments_only = false
 
 begin
-  response = xero_client.accounting_api.get_report_profit_and_loss(xero_tenant_id, from_date, to_date, periods, time_frame, tracking_category_id, tracking_category_id_2, tracking_option_id, tracking_option_id_2, standard_layout, payments_only)
+  response = xero_client.accounting_api.get_report_profit_and_loss(xero_tenant_id, from_date, to_date, periods, timeframe, tracking_category_id, tracking_category_id_2, tracking_option_id, tracking_option_id_2, standard_layout, payments_only)
   return response
 rescue XeroRuby::ApiError => e
   puts "Exception when calling get_report_profit_and_loss: #{e}"
@@ -32881,6 +33853,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.reports.read</td>
+                      <td>Grant read-only access to accounting reports</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.reports.tenninetynine.read</td>
                       <td>Grant read-only access to 1099 reports</td>
                     </tr>
@@ -33078,6 +34055,85 @@ Return cash only basis for the Trial Balance report
                 </article>
               </div>
               <hr>
+              <div id="api-Accounting-getReportsList">
+                <article id="api-Accounting-getReportsList-0" data-group="User" data-name="getReportsList" data-version="0">
+                  <div class="pull-left">
+                    <h1>getReportsList</h1>
+                    <p>Retrieves a list of the organistaions unique reports that require a uuid to fetch</p>
+                  </div>
+                  <div class="pull-right"></div>
+                  <div class="clearfix"></div>
+                  <p></p>
+                  <p class="marked"></p>
+                  <p></p>
+                  <br />
+                  <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/Reports</span></code></pre>
+                  <p>
+                  <h3>Usage and SDK Samples</h3>
+                  </p>
+                  <ul class="nav nav-tabs nav-tabs-examples">
+                    <!-- *****REPLACE***** comment out the other languages <li> -->
+                    <li class=""><a href="#examples-Accounting-getReportsList-0-ruby">Ruby</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <!-- *****REPLACE***** comment out the other languages tab-pane -->
+                    <div class="tab-pane" id="examples-Accounting-getReportsList-0-ruby">
+                      <pre class="prettyprint"><code class="language-ruby">xero_client.set_token_set(user.token_set)
+
+xero_tenant_id = 'YOUR_XERO_TENANT_ID'
+
+begin
+  response = xero_client.accounting_api.get_reports_list(xero_tenant_id)
+  return response
+rescue XeroRuby::ApiError => e
+  puts "Exception when calling get_reports_list: #{e}"
+end
+</code></pre>
+                    </div>
+                  </div>
+                  <h2>Scopes</h2>
+                  <table>
+                    
+                    <tr>
+                      <td>accounting.reports.read</td>
+                      <td>Grant read-only access to accounting reports</td>
+                    </tr>
+                    
+                  </table>
+                  <h2>Parameters</h2>
+                  <div class="methodsubtabletitle">Header parameters</div>
+                  <table id="methodsubtable">
+                    <tr>
+                      <th width="150px">Name</th>
+                      <th>Description</th>
+                    </tr>
+                    <tr><td style="width:150px;">xero-tenant-id<span style="color:red;">*</span></td>
+<td>
+
+
+    <div id="d2e199_getReportsList_xeroTenantId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Xero identifier for Tenant
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                  </table>
+                </article>
+              </div>
+              <hr>
               <div id="api-Accounting-getTaxRates">
                 <article id="api-Accounting-getTaxRates-0" data-group="User" data-name="getTaxRates" data-version="0">
                   <div class="pull-left">
@@ -33119,6 +34175,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -33270,6 +34331,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -33417,6 +34483,11 @@ end
                   <table>
                     
                     <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
+                    
+                    <tr>
                       <td>accounting.settings.read</td>
                       <td>Grant read-only access to organisation and account settings</td>
                     </tr>
@@ -33528,6 +34599,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>
@@ -33643,6 +34719,11 @@ end
                   </div>
                   <h2>Scopes</h2>
                   <table>
+                    
+                    <tr>
+                      <td>accounting.settings</td>
+                      <td>Grant read-write access to organisation and account settings</td>
+                    </tr>
                     
                     <tr>
                       <td>accounting.settings.read</td>

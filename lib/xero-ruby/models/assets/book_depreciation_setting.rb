@@ -18,17 +18,17 @@ module XeroRuby::Assets
   class BookDepreciationSetting
     # The method of depreciation applied to this asset. See Depreciation Methods
     attr_accessor :depreciation_method
-    NO_DEPRECIATION = "NoDepreciation".freeze
-    STRAIGHT_LINE = "StraightLine".freeze
-    DIMINISHING_VALUE100 = "DiminishingValue100".freeze
-    DIMINISHING_VALUE150 = "DiminishingValue150".freeze
-    DIMINISHING_VALUE200 = "DiminishingValue200".freeze
-    FULL_DEPRECIATION = "FullDepreciation".freeze
+    NO_DEPRECIATION ||= "NoDepreciation".freeze
+    STRAIGHT_LINE ||= "StraightLine".freeze
+    DIMINISHING_VALUE100 ||= "DiminishingValue100".freeze
+    DIMINISHING_VALUE150 ||= "DiminishingValue150".freeze
+    DIMINISHING_VALUE200 ||= "DiminishingValue200".freeze
+    FULL_DEPRECIATION ||= "FullDepreciation".freeze
     
     # The method of averaging applied to this asset. See Averaging Methods
     attr_accessor :averaging_method
-    FULL_MONTH = "FullMonth".freeze
-    ACTUAL_DAYS = "ActualDays".freeze
+    FULL_MONTH ||= "FullMonth".freeze
+    ACTUAL_DAYS ||= "ActualDays".freeze
     
     # The rate of depreciation (e.g. 0.05)
     attr_accessor :depreciation_rate
@@ -38,9 +38,9 @@ module XeroRuby::Assets
     
     # See Depreciation Calculation Methods
     attr_accessor :depreciation_calculation_method
-    RATE = "Rate".freeze
-    LIFE = "Life".freeze
-    NONE = "None".freeze
+    RATE ||= "Rate".freeze
+    LIFE ||= "Life".freeze
+    NONE ||= "None".freeze
     
     # Unique Xero identifier for the depreciable object
     attr_accessor :depreciable_object_id
@@ -351,6 +351,8 @@ module XeroRuby::Assets
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

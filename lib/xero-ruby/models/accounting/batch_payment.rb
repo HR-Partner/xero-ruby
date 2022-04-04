@@ -51,13 +51,13 @@ module XeroRuby::Accounting
     
     # PAYBATCH for bill payments or RECBATCH for sales invoice payments (read-only)
     attr_accessor :type
-    PAYBATCH = "PAYBATCH".freeze
-    RECBATCH = "RECBATCH".freeze
+    PAYBATCH ||= "PAYBATCH".freeze
+    RECBATCH ||= "RECBATCH".freeze
     
     # AUTHORISED or DELETED (read-only). New batch payments will have a status of AUTHORISED. It is not possible to delete batch payments via the API.
     attr_accessor :status
-    AUTHORISED = "AUTHORISED".freeze
-    DELETED = "DELETED".freeze
+    AUTHORISED ||= "AUTHORISED".freeze
+    DELETED ||= "DELETED".freeze
     
     # The total of the payments that make up the batch (read-only)
     attr_accessor :total_amount
@@ -486,6 +486,8 @@ module XeroRuby::Accounting
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

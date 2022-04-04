@@ -21,10 +21,10 @@ module XeroRuby::PayrollNz
     
     # The schedule of accrual
     attr_accessor :schedule_of_accrual
-    ANNUALLY_AFTER6_MONTHS = "AnnuallyAfter6Months".freeze
-    ON_ANNIVERSARY_DATE = "OnAnniversaryDate".freeze
-    PERCENTAGE_OF_GROSS_EARNINGS = "PercentageOfGrossEarnings".freeze
-    NO_ACCRUALS = "NoAccruals".freeze
+    ANNUALLY_AFTER6_MONTHS ||= "AnnuallyAfter6Months".freeze
+    ON_ANNIVERSARY_DATE ||= "OnAnniversaryDate".freeze
+    PERCENTAGE_OF_GROSS_EARNINGS ||= "PercentageOfGrossEarnings".freeze
+    NO_ACCRUALS ||= "NoAccruals".freeze
     
     # The number of hours accrued for the leave annually. This is 0 when the scheduleOfAccrual chosen is \"OnHourWorked\"
     attr_accessor :hours_accrued_annually
@@ -340,6 +340,8 @@ module XeroRuby::PayrollNz
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

@@ -47,7 +47,7 @@ describe XeroRuby::ApiClient do
             state: 'i-am-customer-state'
           }
           api_client = XeroRuby::ApiClient.new(credentials: creds)
-          expect(api_client.authorization_url).to eq('https://login.xero.com/identity/connect/authorize?response_type=code&client_id=abc&redirect_uri=https://mydomain.com/callback&scope=openid+profile+email+accounting.transactions+accounting.settings&state=i-am-customer-state')
+          expect(api_client.authorization_url).to eq('https://login.xero.com/identity/connect/authorize?response_type=code&client_id=abc&redirect_uri=https%3A%2F%2Fmydomain.com%2Fcallback&scope=openid+profile+email+accounting.transactions+accounting.settings&state=i-am-customer-state')
         end
 
         it "Does not append state if it is not provided" do
@@ -58,7 +58,7 @@ describe XeroRuby::ApiClient do
             scopes: 'openid profile email accounting.transactions accounting.settings'
           }
           api_client = XeroRuby::ApiClient.new(credentials: creds)
-          expect(api_client.authorization_url).to eq('https://login.xero.com/identity/connect/authorize?response_type=code&client_id=abc&redirect_uri=https://mydomain.com/callback&scope=openid+profile+email+accounting.transactions+accounting.settings')
+          expect(api_client.authorization_url).to eq('https://login.xero.com/identity/connect/authorize?response_type=code&client_id=abc&redirect_uri=https%3A%2F%2Fmydomain.com%2Fcallback&scope=openid+profile+email+accounting.transactions+accounting.settings')
         end
 
         it "Validates state on callback matches @config.state" do
@@ -73,6 +73,29 @@ describe XeroRuby::ApiClient do
           altered_state = {'state': 'not-original-state'}
           expect{api_client.validate_state(altered_state)}.to raise_error(StandardError, 'WARNING: @config.state: custom-state and OAuth callback state:  do not match!')
         end
+      end
+
+      context "Creates a valid client_credentials client" do
+
+        it "But still defaults to grant_type: authorization_code" do
+          creds = {
+            client_id: 'abc',
+            client_secret: '123',
+          }
+          api_client = XeroRuby::ApiClient.new(credentials: creds)
+          expect(api_client.grant_type).to eq('authorization_code')
+        end
+
+        it "Sets grant_type correctly" do
+          creds = {
+            client_id: 'abc',
+            client_secret: '123',
+            grant_type: 'client_credentials'
+          }
+          api_client = XeroRuby::ApiClient.new(credentials: creds)
+          expect(api_client.grant_type).to eq('client_credentials')
+        end
+
       end
     end
   end
@@ -151,6 +174,9 @@ describe XeroRuby::ApiClient do
 
       api_client.payroll_uk_api
       expect(api_client.config.base_url).to eq('https://api.xero.com/payroll.xro/2.0/')
+
+      api_client.finance_api
+      expect(api_client.config.base_url).to eq('https://api.xero.com/finance.xro/1.0/')
 
       api_client.connections
       expect(api_client.config.base_url).to eq('https://api.xero.com')

@@ -18,18 +18,18 @@ module XeroRuby::PayrollUk
   class EmployeeStatutoryLeaveBalance
     # The type of statutory leave
     attr_accessor :leave_type
-    SICK = "Sick".freeze
-    ADOPTION = "Adoption".freeze
-    MATERNITY = "Maternity".freeze
-    PATERNITY = "Paternity".freeze
-    SHAREDPARENTAL = "Sharedparental".freeze
+    SICK ||= "Sick".freeze
+    ADOPTION ||= "Adoption".freeze
+    MATERNITY ||= "Maternity".freeze
+    PATERNITY ||= "Paternity".freeze
+    SHAREDPARENTAL ||= "Sharedparental".freeze
     
     # The balance remaining for the corresponding leave type as of specified date.
     attr_accessor :balance_remaining
     
     # The units will be \"Hours\"
     attr_accessor :units
-    HOURS = "Hours".freeze
+    HOURS ||= "Hours".freeze
     
     class EnumAttributeValidator
       attr_reader :datatype
@@ -284,6 +284,8 @@ module XeroRuby::PayrollUk
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end

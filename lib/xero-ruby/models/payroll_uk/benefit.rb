@@ -24,8 +24,8 @@ module XeroRuby::PayrollUk
     
     # Category type of the employer pension
     attr_accessor :category
-    STAKEHOLDER_PENSION = "StakeholderPension".freeze
-    OTHER = "Other".freeze
+    STAKEHOLDER_PENSION ||= "StakeholderPension".freeze
+    OTHER ||= "Other".freeze
     
     # Xero identifier for Liability Account
     attr_accessor :liability_account_id
@@ -41,8 +41,8 @@ module XeroRuby::PayrollUk
     
     # Calculation Type of the employer pension (FixedAmount or PercentageOfGross).
     attr_accessor :calculation_type
-    FIXED_AMOUNT = "FixedAmount".freeze
-    PERCENTAGE_OF_GROSS = "PercentageOfGross".freeze
+    FIXED_AMOUNT ||= "FixedAmount".freeze
+    PERCENTAGE_OF_GROSS ||= "PercentageOfGross".freeze
     
     # Identifier of a record is active or not.
     attr_accessor :current_record
@@ -422,6 +422,8 @@ module XeroRuby::PayrollUk
         original, date, timezone = *date_pattern.match(datestring)
         date = (date.to_i / 1000)
         Time.at(date).utc.strftime('%Y-%m-%dT%H:%M:%S%z').to_s
+      elsif /(\d\d\d\d)-(\d\d)/.match(datestring) # handles dates w/out Days: YYYY-MM*-DD
+        Time.parse(datestring + '-01').strftime('%Y-%m-%dT%H:%M:%S').to_s
       else # handle date 'types' for small subset of payroll API's
         Time.parse(datestring).strftime('%Y-%m-%dT%H:%M:%S').to_s
       end
